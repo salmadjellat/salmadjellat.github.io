@@ -1173,3 +1173,16 @@ details.faq-item summary::after { color: var(--pink-deep); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --pink-ink: #F0CADA; } }
 .section-label, .eyebrow, .zh-label, .fv-label, .collab-label, .page-hero .section-label, .blog-area { color: var(--pink-ink); }
 .hero-photo .hero-zones.hero-madrid { color: var(--pink-ink); }
+
+/* ===== Portada: resumen + guía ===== */
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 900px; margin: 0 auto; }
+.summary-card { display: flex; flex-direction: column; border: 1px solid var(--hairline); border-top: 3px solid var(--pink); border-radius: 6px; padding: 22px 20px; background: var(--surface); text-decoration: none; color: var(--ink); transition: transform .15s ease, border-color .15s ease; }
+.summary-card:hover { transform: translateY(-2px); border-top-color: var(--pink-deep); }
+.summary-k { margin: 0 0 8px; font-size: 12.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--pink-ink); font-weight: 600; }
+.summary-t { margin: 0 0 14px; font-size: 1.12rem; line-height: 1.4; color: var(--ink); }
+.summary-more { margin-top: auto; font-size: .95rem; color: var(--brown-deep); font-weight: 600; }
+.guide-strip { max-width: 900px; margin: 22px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; background: color-mix(in srgb, var(--pink) 18%, var(--bg-soft)); border: 1px solid color-mix(in srgb, var(--pink) 50%, var(--hairline)); border-radius: 6px; padding: 20px 24px; }
+.guide-strip .summary-k { margin-bottom: 4px; }
+.guide-t { margin: 0; font-size: 1.25rem; font-weight: 500; color: var(--brown-deep); }
+@media (max-width: 760px) { .summary-grid { grid-template-columns: 1fr; } .guide-strip { flex-direction: column; align-items: flex-start; } }
+.footer-contact { flex-wrap: wrap; justify-content: center; }
