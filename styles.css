@@ -1132,3 +1132,44 @@ section.band { background: var(--bg-soft); }
 .ic-lg svg { width: 28px; height: 28px; }
 @media (max-width: 600px) { .adult-block { flex-direction: column; } }
 .faq-side img { height: auto; aspect-ratio: 4/5; object-fit: cover; }
+
+/* ===== Blog: tarjetas ===== */
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
+.blog-card { border: 1px solid var(--hairline); border-top: 3px solid var(--pink-deep); border-radius: 6px; background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
+.blog-card img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border-bottom: 1px solid var(--hairline); }
+.blog-card-body { padding: 16px 18px 20px; }
+.blog-area { margin: 0 0 6px; font-size: 12.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--pink-deep); font-weight: 600; }
+.blog-card h3 { margin: 0 0 8px; font-size: 1.2rem; font-weight: 600; color: var(--brown-deep); line-height: 1.25; }
+.blog-card-body p:not(.blog-area) { margin: 0; color: var(--ink-soft); font-size: .98rem; line-height: 1.5; }
+@media (max-width: 860px) { .blog-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .blog-grid { grid-template-columns: 1fr; } }
+
+/* ===== Más rosa ===== */
+.section-label, .eyebrow, .zh-label, .fv-label, .collab-label { color: var(--pink-deep); }
+.page-hero .section-label { color: var(--pink-deep); }
+.section-title::after, .page-title::after { content: ""; display: block; width: 48px; height: 3px; background: var(--pink); border-radius: 2px; margin: 14px auto 0; }
+.zone-col .section-title::after, .split-txt .section-title::after, .adult-block .section-title::after, .hero-photo .hero-title::after { content: none; }
+.page-hero h1.page-title { color: var(--brown-deep); }
+.ic { background: color-mix(in srgb, var(--pink) 38%, var(--surface)); color: var(--brown-deep); }
+.steps .n { background: var(--pink-deep); color: #fff; }
+.steps li, .feature-grid li, .zh-card, .faq-side { border-top: 3px solid var(--pink); }
+section.band { background: color-mix(in srgb, var(--pink) 16%, var(--bg-soft)); }
+.chip-list li, .coverage-chips li { background: color-mix(in srgb, var(--pink) 22%, var(--surface)); border-color: color-mix(in srgb, var(--pink) 55%, var(--hairline)); }
+.zh-name { color: var(--brown-deep); }
+.faq-group { border-bottom-color: var(--pink); }
+details.faq-item[open] { border-color: var(--pink); }
+details.faq-item summary::after { color: var(--pink-deep); }
+.hero-photo .hero-zones { color: var(--brown); }
+.hero-photo .hero-zones.hero-madrid::first-line { color: var(--pink-deep); }
+.review-stars { color: var(--pink-deep); }
+.btn.primary { box-shadow: 0 3px 0 var(--pink); }
+.btn.ghost { border-color: var(--pink-deep); }
+.rate-value { color: var(--pink-deep); }
+.zh-time span { border-color: var(--pink); }
+.footer-contact a { color: var(--brown-deep); }
+.faq-side .btn.primary, .band-cta .btn.primary { box-shadow: 0 3px 0 var(--pink); }
+.blog-card img { height: auto; }
+:root { --pink-ink: #A8506F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --pink-ink: #F0CADA; } }
+.section-label, .eyebrow, .zh-label, .fv-label, .collab-label, .page-hero .section-label, .blog-area { color: var(--pink-ink); }
+.hero-photo .hero-zones.hero-madrid { color: var(--pink-ink); }
