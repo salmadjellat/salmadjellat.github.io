@@ -1,0 +1,354 @@
+<!doctype html><html><head><meta name="robots" content="noindex"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Semáforo de turnos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* Una sola pantalla de día: cielo y césped con animales alrededor; el semáforo y un picto grande del estado mandan; el texto acompaña pequeño. Look único claro. */
+:root {
+  color-scheme: light;
+  --cielo: #bfe6ff;
+  --cielo-2: #e8f6ff;
+  --cesped: #8fcf6b;
+  --cesped-2: #6fb84e;
+  --tarjeta: rgba(255, 255, 255, .88);
+  --borde: #1d1d1b;
+  --texto: #1d1d1b;
+  --texto-suave: #43515c;
+  --carcasa: #1c242b;
+  --rojo: #ff4b4b;      --rojo-off: #5a2a2d;
+  --ambar: #ffc21a;     --ambar-off: #5a4a1e;
+  --verde: #2fd36b;     --verde-off: #1d4a2f;
+  --linea: #f5c400;
+  --display: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  --body: 'Andika', 'Trebuchet MS', system-ui, sans-serif;
+}
+html, body { height: 100%; }
+body { background: var(--cielo); color: var(--texto); font-family: var(--body); font-size: 16px; overflow-x: hidden; }
+
+.fondo { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  background: linear-gradient(180deg, var(--cielo-2) 0%, var(--cielo) 58%, var(--cesped) 58%, var(--cesped-2) 100%); }
+.fondo .nube { position: absolute; background: #fff; border-radius: 999px; opacity: .9; }
+.fondo img { position: absolute; width: var(--t); height: var(--t); }
+.app { position: relative; z-index: 1; min-height: 100%; box-sizing: border-box; padding-block: 16px; padding-inline: max(16px, 3vw); display: flex; flex-direction: column; gap: 14px; }
+
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h1 { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(20px, 2.6vw, 26px); background: var(--tarjeta); padding: 4px 14px; border-radius: 999px; }
+.herr { display: flex; gap: 8px; }
+.chip { font: 700 14px var(--body); color: var(--texto); background: #fff; border: 2px solid var(--borde); border-radius: 999px; padding: 6px 14px; cursor: pointer; min-height: 40px; }
+.chip:focus-visible, button:focus-visible, select:focus-visible { outline: 3px solid #1f6fd1; outline-offset: 3px; }
+
+.escena { flex: 1; display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: clamp(16px, 4vw, 60px); align-items: center; justify-items: center; }
+.semaforo { display: flex; flex-direction: column; align-items: center; }
+.carcasa { background: var(--carcasa); border: 6px solid #0a0d10; border-radius: 44px; padding: 18px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 16px 40px rgba(0,0,0,.3), inset 0 0 0 3px #2c3741; }
+.poste { width: 34px; height: 60px; background: linear-gradient(90deg, #1a2026, #4a5762, #1a2026); }
+.luz { --s: min(21vh, 170px); width: var(--s); height: var(--s); border-radius: 50%; display: grid; place-items: center; transition: background .25s, box-shadow .25s, transform .25s; }
+.luz svg { width: 80%; height: 80%; opacity: .3; stroke: #000; transition: opacity .25s; }
+.luz.on svg { opacity: 1; stroke: var(--borde); }
+.luz[data-c="rojo"]  { background: var(--rojo-off); }
+.luz[data-c="ambar"] { background: var(--ambar-off); }
+.luz[data-c="verde"] { background: var(--verde-off); }
+.luz.on[data-c="rojo"]  { background: radial-gradient(circle at 35% 30%, #ffb0b0, var(--rojo) 60%); box-shadow: 0 0 44px 12px rgba(255,75,75,.55); }
+.luz.on[data-c="ambar"] { background: radial-gradient(circle at 35% 30%, #ffe8a0, var(--ambar) 60%); box-shadow: 0 0 44px 12px rgba(255,194,26,.55); }
+.luz.on[data-c="verde"] { background: radial-gradient(circle at 35% 30%, #b0f3c8, var(--verde) 60%); box-shadow: 0 0 44px 12px rgba(47,211,107,.55); }
+.luz.on { transform: scale(1.04); }
+.sacudir { animation: sacudir .45s; }
+@keyframes sacudir { 0%,100% { transform: translateX(0) scale(1.04); } 25% { transform: translateX(-8px) scale(1.04); } 75% { transform: translateX(8px) scale(1.04); } }
+
+.lado { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; max-width: 520px; width: 100%; background: var(--tarjeta); border: 4px solid var(--borde); border-radius: 36px; padding: 22px 18px; box-sizing: border-box; }
+.picto { width: min(30vh, 240px); height: min(30vh, 240px); border-radius: 50%; border: 6px solid var(--borde); display: grid; place-items: center; transition: background .25s; }
+.picto svg { width: 76%; height: 76%; stroke: var(--borde); }
+.picto[data-c="rojo"] { background: var(--rojo); } .picto[data-c="ambar"] { background: var(--ambar); } .picto[data-c="verde"] { background: var(--verde); }
+.estado { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.05; }
+.sub { font-size: 17px; color: var(--texto-suave); min-height: 1.3em; margin-top: -8px; }
+.cuenta { display: flex; gap: 10px; min-height: 24px; }
+.cuenta i { width: 24px; height: 24px; border-radius: 50%; background: var(--ambar); border: 3px solid var(--borde); box-sizing: border-box; transition: opacity .3s, transform .3s; }
+.cuenta i.gastado { opacity: .2; transform: scale(.7); }
+.barra { width: min(380px, 100%); height: 18px; border-radius: 99px; background: #d6efe0; border: 3px solid var(--borde); overflow: hidden; box-sizing: border-box; }
+.barra > div { height: 100%; width: 100%; background: var(--verde); transition: width 1s linear; }
+.boton-nino { font-family: var(--display); font-weight: 600; font-size: clamp(22px, 2.8vw, 30px); color: var(--texto); background: #fff6d6; border: 5px solid var(--borde); border-radius: 28px; padding: 12px 26px; min-height: 84px; display: inline-flex; align-items: center; gap: 14px; cursor: pointer; box-shadow: 0 7px 0 var(--borde); transition: transform .1s, box-shadow .1s, opacity .2s; touch-action: manipulation; }
+.boton-nino svg { width: 60px; height: 60px; flex-shrink: 0; }
+.boton-nino:active { transform: translateY(6px); box-shadow: 0 1px 0 var(--borde); }
+.boton-nino[aria-disabled="true"] { opacity: .5; cursor: default; }
+
+.carrera { background: var(--tarjeta); border: 3px solid var(--borde); border-radius: 20px; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 6px; }
+.carrera-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.carrera-top strong { font-family: var(--display); font-weight: 600; font-size: 19px; }
+.carrera-top span { color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.pista { position: relative; height: 66px; background: #55626d; border-radius: 12px; overflow: hidden; }
+.pista::before { content: ""; position: absolute; left: 16px; right: 60px; top: 50%; border-top: 4px dashed var(--linea); }
+.paradas { position: absolute; inset: 0 60px 0 16px; display: flex; justify-content: space-between; align-items: center; }
+.paradas b { width: 14px; height: 14px; border-radius: 50%; background: #7b8790; border: 2px solid #2b343b; transition: background .3s; }
+.paradas b.hecha { background: var(--linea); }
+.coche { position: absolute; top: 50%; width: 76px; height: 46px; transform: translate(-50%, -50%); transition: left .9s cubic-bezier(.3,1.4,.5,1); }
+.meta { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 44px; height: 52px; }
+
+.fiesta { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(20,40,60,.72); z-index: 5; text-align: center; padding: 16px; }
+.fiesta .caja { background: #fff; border: 5px solid var(--borde); border-radius: 30px; padding: 26px 34px; }
+.fiesta .grande { font-family: var(--display); font-weight: 700; font-size: clamp(40px, 7vw, 76px); color: #e0662b; }
+.fiesta p { font-size: 22px; margin: 8px 0 20px; }
+
+details.adulto { background: var(--tarjeta); border: 3px solid var(--borde); border-radius: 16px; padding: 2px 16px; }
+details.adulto summary { cursor: pointer; padding: 10px 0; font-weight: 700; }
+.controles { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; padding: 6px 0 14px; }
+.grupo { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { font: 700 16px var(--body); border-radius: 12px; padding: 12px 18px; border: 3px solid var(--borde); cursor: pointer; min-height: 48px; color: var(--texto); }
+.btn.verde { background: var(--verde); } .btn.rojo { background: var(--rojo); } .btn.gris { background: #fff; }
+label.campo { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--texto-suave); }
+select { font: 16px var(--body); color: var(--texto); background: #fff; border: 2px solid var(--borde); border-radius: 10px; padding: 8px 10px; min-height: 44px; }
+.atajos { font-size: 14px; color: var(--texto-suave); width: 100%; margin: 0; }
+kbd { font-family: var(--body); background: #fff; border: 1px solid #8a959e; border-radius: 6px; padding: 1px 7px; }
+
+/* Modo sesión: oculta todo lo del adulto y deja solo lo que ve Martín */
+.salir { position: fixed; top: max(10px, env(safe-area-inset-top, 0px)); right: 12px; z-index: 4; }
+body.sesion header, body.sesion details.adulto { display: none; }
+body.sesion .app { min-height: 100vh; min-height: 100dvh; }
+body.sesion .luz { --s: min(25vh, 200px); }
+
+[hidden] { display: none !important; }
+@media (max-width: 760px) {
+  .escena { grid-template-columns: 1fr; }
+  .luz, body.sesion .luz { --s: min(22vw, 110px); }
+  .carcasa { flex-direction: row; padding: 14px; border-radius: 30px; }
+  .poste { display: none; }
+  .fondo img.lejos { display: none; }
+  .app { gap: 10px; padding-block: 10px; }
+  h1 { font-size: 18px; }
+  .chip { min-height: 36px; padding: 4px 12px; font-size: 13px; }
+  .carcasa { padding: 10px; gap: 12px; border-width: 4px; }
+  .luz, body.sesion .luz { --s: min(18vw, 12vh, 90px); }
+  .lado { padding: 14px 12px; gap: 8px; border-radius: 26px; border-width: 3px; }
+  .picto, body.sesion .picto { width: min(34vw, 19vh); height: min(34vw, 19vh); border-width: 5px; }
+  .estado { font-size: 26px; }
+  .sub { font-size: 15px; margin-top: -4px; }
+  .boton-nino { min-height: 64px; padding: 8px 18px; font-size: 22px; border-width: 4px; box-shadow: 0 5px 0 var(--borde); }
+  .boton-nino svg { width: 42px; height: 42px; }
+  .carrera { padding: 8px 12px 10px; }
+  .carrera-top strong { font-size: 16px; }
+  .pista { height: 54px; }
+  .coche { width: 64px; height: 39px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="fondo" aria-hidden="true">
+  <div class="nube" style="left: 8%; top: 7%; width: 150px; height: 46px"></div>
+  <div class="nube" style="left: 52%; top: 4%; width: 190px; height: 54px"></div>
+  <div class="nube" style="left: 80%; top: 14%; width: 130px; height: 40px"></div>
+  <img class="" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTAwLjAiIGN5PSI2Mi4wIiByPSIxMyIgZmlsbD0iI0Q5ODIyQiIgLz48Y2lyY2xlIGN4PSI5NC42IiBjeT0iODIuMCIgcj0iMTMiIGZpbGw9IiNEOTgyMkIiIC8+PGNpcmNsZSBjeD0iODAuMCIgY3k9Ijk2LjYiIHI9IjEzIiBmaWxsPSIjRDk4MjJCIiAvPjxjaXJjbGUgY3g9IjYwLjAiIGN5PSIxMDIuMCIgcj0iMTMiIGZpbGw9IiNEOTgyMkIiIC8+PGNpcmNsZSBjeD0iNDAuMCIgY3k9Ijk2LjYiIHI9IjEzIiBmaWxsPSIjRDk4MjJCIiAvPjxjaXJjbGUgY3g9IjI1LjQiIGN5PSI4Mi4wIiByPSIxMyIgZmlsbD0iI0Q5ODIyQiIgLz48Y2lyY2xlIGN4PSIyMC4wIiBjeT0iNjIuMCIgcj0iMTMiIGZpbGw9IiNEOTgyMkIiIC8+PGNpcmNsZSBjeD0iMjUuNCIgY3k9IjQyLjAiIHI9IjEzIiBmaWxsPSIjRDk4MjJCIiAvPjxjaXJjbGUgY3g9IjQwLjAiIGN5PSIyNy40IiByPSIxMyIgZmlsbD0iI0Q5ODIyQiIgLz48Y2lyY2xlIGN4PSI2MC4wIiBjeT0iMjIuMCIgcj0iMTMiIGZpbGw9IiNEOTgyMkIiIC8+PGNpcmNsZSBjeD0iODAuMCIgY3k9IjI3LjQiIHI9IjEzIiBmaWxsPSIjRDk4MjJCIiAvPjxjaXJjbGUgY3g9Ijk0LjYiIGN5PSI0Mi4wIiByPSIxMyIgZmlsbD0iI0Q5ODIyQiIgLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjYyIiByPSIzMiIgZmlsbD0iI0Y3QzY1QiIgLz48Y2lyY2xlIGN4PSI0OSIgY3k9IjU2IiByPSIzLjUiIGZpbGw9IiMxZDFkMWIiIHN0cm9rZT0ibm9uZSIvPjxjaXJjbGUgY3g9IjcxIiBjeT0iNTYiIHI9IjMuNSIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTU0IDY2IEw2NiA2NiBMNjAgNzMgWiIgZmlsbD0iIzhCNUUzQyIgLz48cGF0aCBkPSJNNjAgNzMgUTU0IDgyIDQ3IDc3IE02MCA3MyBRNjYgODIgNzMgNzciIGZpbGw9Im5vbmUiLz48L2c+PC9zdmc+" style="left:19%;top:62%;--t:130px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMjAiIGN5PSI2MiIgcj0iMTIiIGZpbGw9IiNGM0QyQTYiIC8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iNjIiIHI9IjEyIiBmaWxsPSIjRjNEMkE2IiAvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjQwIiBmaWxsPSIjQTk3NDRBIiAvPjxwYXRoIGQ9Ik02MCA0MCBRNDQgMjggMzYgNDQgUTMwIDU4IDQwIDY4IFEzNiA5MiA2MCA5NCBRODQgOTIgODAgNjggUTkwIDU4IDg0IDQ0IFE3NiAyOCA2MCA0MCBaIiBmaWxsPSIjRjNEMkE2IiAvPjxjaXJjbGUgY3g9IjQ4IiBjeT0iNTQiIHI9IjMuNSIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iNzIiIGN5PSI1NCIgcj0iMy41IiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48Y2lyY2xlIGN4PSI1NiIgY3k9IjcwIiByPSIyIiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48Y2lyY2xlIGN4PSI2NCIgY3k9IjcwIiByPSIyIiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48cGF0aCBkPSJNNDYgODAgUTYwIDkwIDc0IDgwIiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==" style="left:27%;top:80%;--t:110px">
+  <img class="" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzNCIgcj0iMTQiIGZpbGw9IiNCOTgxNEYiIC8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzNCIgcj0iMTQiIGZpbGw9IiNCOTgxNEYiIC8+PGNpcmNsZSBjeD0iMzAiIGN5PSIzNCIgcj0iNiIgZmlsbD0iI0U3QzM5QSIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzNCIgcj0iNiIgZmlsbD0iI0U3QzM5QSIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iNjAiIGN5PSI2NCIgcj0iNDAiIGZpbGw9IiNCOTgxNEYiIC8+PGVsbGlwc2UgY3g9IjYwIiBjeT0iNzgiIHJ4PSIxOCIgcnk9IjE0IiBmaWxsPSIjRUJDQjlFIiAvPjxjaXJjbGUgY3g9IjQ1IiBjeT0iNTYiIHI9IjMuNSIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iNzUiIGN5PSI1NiIgcj0iMy41IiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI3MiIgcng9IjYiIHJ5PSI0IiBmaWxsPSIjMWQxZDFiIiAvPjxwYXRoIGQ9Ik02MCA3NiBMNjAgODIgTTUyIDg0IFE2MCA5MCA2OCA4NCIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=" style="right:2%;top:60%;--t:130px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGVsbGlwc2UgY3g9IjQ0IiBjeT0iMzAiIHJ4PSIxMCIgcnk9IjI2IiBmaWxsPSIjRjFFQ0U0IiB0cmFuc2Zvcm09InJvdGF0ZSgtOCA0NCAzMCkiLz48ZWxsaXBzZSBjeD0iNzYiIGN5PSIzMCIgcng9IjEwIiByeT0iMjYiIGZpbGw9IiNGMUVDRTQiIHRyYW5zZm9ybT0icm90YXRlKDggNzYgMzApIi8+PGVsbGlwc2UgY3g9IjQ0IiBjeT0iMzAiIHJ4PSI0IiByeT0iMTciIGZpbGw9IiNGNUI3QzAiIHN0cm9rZT0ibm9uZSIgdHJhbnNmb3JtPSJyb3RhdGUoLTggNDQgMzApIi8+PGVsbGlwc2UgY3g9Ijc2IiBjeT0iMzAiIHJ4PSI0IiByeT0iMTciIGZpbGw9IiNGNUI3QzAiIHN0cm9rZT0ibm9uZSIgdHJhbnNmb3JtPSJyb3RhdGUoOCA3NiAzMCkiLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI3OCIgcng9IjM0IiByeT0iMzAiIGZpbGw9IiNGMUVDRTQiIC8+PGNpcmNsZSBjeD0iNDciIGN5PSI3MiIgcj0iMy41IiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48Y2lyY2xlIGN4PSI3MyIgY3k9IjcyIiByPSIzLjUiIGZpbGw9IiMxZDFkMWIiIHN0cm9rZT0ibm9uZSIvPjxwYXRoIGQ9Ik01NiA4MiBMNjQgODIgTDYwIDg3IFoiIGZpbGw9IiNFODYwN0EiIC8+PHBhdGggZD0iTTUyIDkwIFE2MCA5NiA2OCA5MCIgZmlsbD0ibm9uZSIvPjxyZWN0IHg9IjU1IiB5PSI5MyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjkiIHJ4PSIyIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTQwIDg0IEwyMiA4MCBNNDAgODggTDIyIDkyIE04MCA4NCBMOTggODAgTTgwIDg4IEw5OCA5MiIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=" style="right:15%;top:75%;--t:105px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTk2IDc0IEwxMTIgNjIgTDEwMCA4NiBaIiBmaWxsPSIjRkFENjRCIiAvPjxwYXRoIGQ9Ik01NCAxMDAgTDU0IDExNCBNNDggMTE0IEw2MCAxMTQgTTcyIDEwMCBMNzIgMTE0IE02NiAxMTQgTDc4IDExNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjI4QzI4Ii8+PGVsbGlwc2UgY3g9IjYyIiBjeT0iODIiIHJ4PSIzOCIgcnk9IjIyIiBmaWxsPSIjRkFENjRCIiAvPjxwYXRoIGQ9Ik0yNCA0NCBMNCA0OCBRNCA1OCAyNCA1NiBaIiBmaWxsPSIjRjI4QzI4IiAvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjIwIiBmaWxsPSIjRkFENjRCIiAvPjxjaXJjbGUgY3g9IjM0IiBjeT0iNDQiIHI9IjMuNSIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTUyIDc4IFE3MCA2NiA4OCA4MCBRNzIgOTYgNTIgNzggWiIgZmlsbD0iI0YyQkUyRSIgLz48L2c+PC9zdmc+" style="left:44%;top:84%;--t:90px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTQ4IDkyIEwzOCAxMTYgTDU0IDExMiBMNjIgOTQgWiIgZmlsbD0iI0U1NDg0RCIgLz48ZWxsaXBzZSBjeD0iNTgiIGN5PSI3MCIgcng9IjIyIiByeT0iMzAiIGZpbGw9IiM1OEIyNUIiIHRyYW5zZm9ybT0icm90YXRlKC0xMiA1OCA3MCkiLz48cGF0aCBkPSJNNDggNTYgUTM2IDc2IDUwIDk0IFE2MiA4MCA2MCA2MCBaIiBmaWxsPSIjMkU4RjVCIiAvPjxjaXJjbGUgY3g9IjY0IiBjeT0iMzYiIHI9IjIwIiBmaWxsPSIjNThCMjVCIiAvPjxwYXRoIGQ9Ik04MCAyOCBRMTAwIDMwIDk2IDUwIFE5MiA1NiA4NiA1MCBRODggNDIgODAgNDIgWiIgZmlsbD0iI0ZBRDY0QiIgLz48Y2lyY2xlIGN4PSI2OCIgY3k9IjMyIiByPSI3IiBmaWxsPSIjZmZmIiAvPjxjaXJjbGUgY3g9IjY4IiBjeT0iMzIiIHI9IjMiIGZpbGw9IiMxZDFkMWIiIHN0cm9rZT0ibm9uZSIvPjxwYXRoIGQ9Ik0yMCAxMDQgTDEwMCAxMDQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhCNUUzQyIvPjxwYXRoIGQ9Ik01NiA5OCBMNTQgMTA0IE02NCA5OCBMNjYgMTA0IiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==" style="left:24%;top:14%;--t:100px">
+  <img class="" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzgiIHJ4PSIxNCIgcnk9IjIwIiBmaWxsPSIjQ0ZFQkY3IiB0cmFuc2Zvcm09InJvdGF0ZSgtMjAgNDggMzgpIi8+PGVsbGlwc2UgY3g9IjcwIiBjeT0iMzYiIHJ4PSIxNCIgcnk9IjIwIiBmaWxsPSIjQ0ZFQkY3IiB0cmFuc2Zvcm09InJvdGF0ZSgyMCA3MCAzNikiLz48cGF0aCBkPSJNMjQgNzAgTDEwIDY2IEwyMiA4MCBaIiBmaWxsPSIjMWQxZDFiIiAvPjxlbGxpcHNlIGN4PSI1OCIgY3k9IjcwIiByeD0iMzQiIHJ5PSIyNSIgZmlsbD0iI0ZBRDY0QiIgLz48cGF0aCBkPSJNNDYgNDkgUTQxIDcwIDQ2IDkxIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTY0IDQ3IFE2MCA3MCA2NCA5MyIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxjaXJjbGUgY3g9Ijk0IiBjeT0iNjYiIHI9IjE0IiBmaWxsPSIjRkFENjRCIiAvPjxjaXJjbGUgY3g9Ijk4IiBjeT0iNjIiIHI9IjMiIGZpbGw9IiMxZDFkMWIiIHN0cm9rZT0ibm9uZSIvPjxwYXRoIGQ9Ik05MiA3MiBROTcgNzYgMTAyIDcxIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTkwIDU0IEw4OCA0MiBNOTkgNTQgTDEwNiA0NCIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=" style="right:28%;top:6%;--t:72px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTggMTAwIFE4IDg4IDI0IDg4IEw4NCA4OCBMOTAgNjYgUTk0IDU0IDEwNCA2MCBRMTEyIDY2IDEwOCA4MCBMMTA2IDkyIFExMDQgMTAwIDk2IDEwMCBaIiBmaWxsPSIjRjJDOThBIiAvPjxwYXRoIGQ9Ik05NiA1OCBMOTIgNDAgTTEwNCA2MCBMMTEwIDQ0IiBmaWxsPSJub25lIi8+PGNpcmNsZSBjeD0iOTIiIGN5PSI0MCIgcj0iMyIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iMTEwIiBjeT0iNDQiIHI9IjMiIGZpbGw9IiMxZDFkMWIiIHN0cm9rZT0ibm9uZSIvPjxjaXJjbGUgY3g9IjUyIiBjeT0iNjAiIHI9IjMyIiBmaWxsPSIjRTA3QTVGIiAvPjxwYXRoIGQ9Ik01NS4wIDYwLjAgTDU1LjIgNjAuNiBMNTUuMiA2MS4yIEw1NS4yIDYxLjkgTDU0LjkgNjIuNiBMNTQuNiA2My4zIEw1NC4wIDYzLjkgTDUzLjQgNjQuNCBMNTIuNiA2NC44IEw1MS43IDY1LjEgTDUwLjcgNjUuMiBMNDkuNyA2NS4xIEw0OC43IDY0LjggTDQ3LjcgNjQuMyBMNDYuOCA2My41IEw0Ni4xIDYyLjYgTDQ1LjUgNjEuNiBMNDUuMCA2MC40IEw0NC45IDU5LjEgTDQ0LjkgNTcuOCBMNDUuMiA1Ni40IEw0NS44IDU1LjEgTDQ2LjYgNTMuOSBMNDcuNyA1Mi44IEw0OS4wIDUxLjkgTDUwLjUgNTEuMyBMNTIuMSA1MC45IEw1My43IDUwLjkgTDU1LjQgNTEuMSBMNTcuMSA1MS43IEw1OC43IDUyLjYgTDYwLjEgNTMuOCBMNjEuMyA1NS4yIEw2Mi4yIDU2LjkgTDYyLjkgNTguOCBMNjMuMSA2MC44IEw2My4wIDYyLjggTDYyLjYgNjQuOSBMNjEuNyA2Ni44IEw2MC41IDY4LjYgTDU4LjkgNzAuMiBMNTcuMCA3MS41IEw1NC45IDcyLjUgTDUyLjYgNzMuMCBMNTAuMiA3My4yIEw0Ny44IDcyLjggTDQ1LjUgNzIuMSBMNDMuMiA3MC45IEw0MS4zIDY5LjMgTDM5LjYgNjcuMyBMMzguMiA2NS4wIEwzNy4zIDYyLjUgTDM2LjkgNTkuOCBMMzYuOSA1Ny4wIEwzNy41IDU0LjMgTDM4LjYgNTEuNiBMNDAuMSA0OS4yIEw0Mi4xIDQ3LjAgTDQ0LjUgNDUuMiBMNDcuMyA0My45IEw1MC4yIDQzLjEgTDUzLjMgNDIuOCBMNTYuNSA0My4xIEw1OS41IDQ0LjAgTDYyLjQgNDUuNCBMNjUuMSA0Ny40IEw2Ny4zIDQ5LjggTDY5LjEgNTIuNyBMNzAuNCA1NS44IEw3MS4xIDU5LjIgTDcxLjEgNjIuNyBMNzAuNiA2Ni4yIEw2OS40IDY5LjUgTDY3LjUgNzIuNyBMNjUuMSA3NS40IEw2Mi4yIDc3LjggTDU5LjAgNzkuNSBMNTUuNCA4MC43IEw1MS42IDgxLjIgTDQ3LjcgODEuMCBMNDMuOSA4MC4xIEw0MC4zIDc4LjUgTDM3LjAgNzYuMiBMMzQuMSA3My40IEwzMS44IDcwLjAgTDMwLjEgNjYuMyBMMjkuMCA2Mi4zIEwyOC44IDU4LjEgTDI5LjMgNTMuOCBMMzAuNiA0OS43IEwzMi42IDQ1LjkiIGZpbGw9Im5vbmUiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI3MCIgcj0iMyIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTk2IDgyIFExMDAgODYgMTA1IDgyIiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==" style="left:30%;top:63%;--t:80px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3QgeD0iNDAiIHk9Ijg4IiB3aWR0aD0iOCIgaGVpZ2h0PSIyMiIgcng9IjIiIGZpbGw9IiMzQTNBM0EiLz48cmVjdCB4PSI2NiIgeT0iODgiIHdpZHRoPSI4IiBoZWlnaHQ9IjIyIiByeD0iMiIgZmlsbD0iIzNBM0EzQSIvPjxjaXJjbGUgY3g9IjM4IiBjeT0iNTgiIHI9IjE4IiBmaWxsPSIjRjRGMUVDIiAvPjxjaXJjbGUgY3g9IjU4IiBjeT0iNDgiIHI9IjIwIiBmaWxsPSIjRjRGMUVDIiAvPjxjaXJjbGUgY3g9Ijc4IiBjeT0iNTYiIHI9IjE4IiBmaWxsPSIjRjRGMUVDIiAvPjxjaXJjbGUgY3g9IjQ0IiBjeT0iNzYiIHI9IjE4IiBmaWxsPSIjRjRGMUVDIiAvPjxjaXJjbGUgY3g9IjcwIiBjeT0iNzYiIHI9IjE4IiBmaWxsPSIjRjRGMUVDIiAvPjxlbGxpcHNlIGN4PSI1OCIgY3k9IjY0IiByeD0iMjgiIHJ5PSIyMCIgZmlsbD0iI0Y0RjFFQyIgc3Ryb2tlPSJub25lIi8+PGVsbGlwc2UgY3g9Ijg2IiBjeT0iNDYiIHJ4PSI4IiByeT0iNCIgZmlsbD0iIzRBNEE0QSIgdHJhbnNmb3JtPSJyb3RhdGUoLTI1IDg2IDQ2KSIvPjxlbGxpcHNlIGN4PSI5OCIgY3k9IjU4IiByeD0iMTIiIHJ5PSIxNSIgZmlsbD0iIzRBNEE0QSIgLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI1NCIgcj0iMyIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTk2IDY2IFExMDAgNjkgMTA0IDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiLz48L2c+PC9zdmc+" style="right:38%;top:64%;--t:100px">
+  <img class="lejos" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCI+PGcgc3Ryb2tlPSIjMWQxZDFiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTI4IDUyIEwyNiAxNiBMNTQgMzQgWiIgZmlsbD0iI0Y2QTU0MSIgLz48cGF0aCBkPSJNOTIgNTIgTDk0IDE2IEw2NiAzNCBaIiBmaWxsPSIjRjZBNTQxIiAvPjxlbGxpcHNlIGN4PSI2MCIgY3k9IjY2IiByeD0iNDAiIHJ5PSIzNCIgZmlsbD0iI0Y2QTU0MSIgLz48ZWxsaXBzZSBjeD0iNjAiIGN5PSI4MCIgcng9IjE3IiByeT0iMTEiIGZpbGw9IiNGRkU5QzQiIHN0cm9rZT0ibm9uZSIvPjxjaXJjbGUgY3g9IjQ1IiBjeT0iNjAiIHI9IjMuNSIgZmlsbD0iIzFkMWQxYiIgc3Ryb2tlPSJub25lIi8+PGNpcmNsZSBjeD0iNzUiIGN5PSI2MCIgcj0iMy41IiBmaWxsPSIjMWQxZDFiIiBzdHJva2U9Im5vbmUiLz48cGF0aCBkPSJNNTUgNzIgTDY1IDcyIEw2MCA3OCBaIiBmaWxsPSIjRTg2MDdBIiAvPjxwYXRoIGQ9Ik02MCA3OCBRNTQgODYgNDggODIgTTYwIDc4IFE2NiA4NiA3MiA4MiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zNCA3MiBMMTQgNjggTTM0IDc4IEwxNCA4MiBNODYgNzIgTDEwNiA2OCBNODYgNzggTDEwNiA4MiIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=" style="right:2%;top:24%;--t:96px">
+</div>
+
+<div class="app">
+  <header>
+    <h1>Semáforo de turnos</h1>
+    <div class="herr">
+      <button class="chip" id="btn-sonido" type="button" aria-pressed="false">Sonido: no</button>
+      <button class="chip" id="btn-pantalla" type="button">Pantalla completa</button>
+    </div>
+  </header>
+
+  <main class="escena">
+    <div class="semaforo" aria-hidden="true">
+      <div class="carcasa">
+        <div class="luz" data-c="rojo" id="luz-rojo"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 26c0-9 6-16 14-16s14 7 14 16c0 7-4 10-7 13s-3 7-3 10c0 5-4 8-8 8s-7-3-7-6"/><path d="M28 27c0-4 3-7 6-7s6 3 6 7c0 3-3 4-4 6"/></svg></div>
+        <div class="luz" data-c="ambar" id="luz-ambar"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 34V14a4 4 0 0 1 8 0v16"/><path d="M30 28V10a4 4 0 0 1 8 0v18"/><path d="M38 28V13a4 4 0 0 1 8 0v21"/><path d="M46 30v-6a4 4 0 0 1 8 0v12c0 12-8 20-19 20h-3c-8 0-12-4-16-10l-6-10a4 4 0 0 1 7-4l5 6"/></svg></div>
+        <div class="luz" data-c="verde" id="luz-verde"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 14h48v28H30l-13 11V42H8z"/><path d="M20 28h0.1M32 28h0.1M44 28h0.1" stroke-width="7"/></svg></div>
+      </div>
+      <div class="poste"></div>
+    </div>
+
+    <section class="lado" aria-live="polite">
+      <div class="picto" id="picto" data-c="rojo"></div>
+      <div class="estado" id="estado">Escucho</div>
+      <div class="sub" id="sub">Ahora habla otra persona</div>
+      <div class="cuenta" id="cuenta" aria-hidden="true"></div>
+      <div class="barra" id="barra" hidden><div id="barra-in"></div></div>
+      <button class="boton-nino" id="btn-quiero" type="button">
+        <svg stroke="#1d1d1b" viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 34V14a4 4 0 0 1 8 0v16"/><path d="M30 28V10a4 4 0 0 1 8 0v18"/><path d="M38 28V13a4 4 0 0 1 8 0v21"/><path d="M46 30v-6a4 4 0 0 1 8 0v12c0 12-8 20-19 20h-3c-8 0-12-4-16-10l-6-10a4 4 0 0 1 7-4l5 6"/></svg>
+        <span id="btn-quiero-txt">Quiero hablar</span>
+      </button>
+    </section>
+  </main>
+
+  <section class="carrera" aria-label="Carrera de turnos">
+    <div class="carrera-top"><strong>Carrera de turnos</strong><span id="marcador">0 de 5 esperas</span></div>
+    <div class="pista">
+      <div class="paradas" id="paradas"></div>
+      <svg class="coche" id="coche" viewBox="0 0 120 70" aria-hidden="true"><g stroke="#1d1d1b" stroke-width="4" stroke-linejoin="round"><path d="M6 54V40q0-8 10-10l14-2 12-18q2-4 8-4h28q6 0 9 5l11 17 8 2q8 2 8 10v14z" fill="#e5484d"/><path d="M47 14h13v16H38zM67 14h11l11 16H67z" fill="#cfebf7"/><circle cx="32" cy="56" r="12" fill="#3a3a3a"/><circle cx="88" cy="56" r="12" fill="#3a3a3a"/><circle cx="32" cy="56" r="4" fill="#d5d8dd"/><circle cx="88" cy="56" r="4" fill="#d5d8dd"/></g></svg>
+      <svg class="meta" viewBox="0 0 44 52" aria-hidden="true"><rect x="6" y="4" width="4" height="46" fill="#d5d8dd"/><rect x="10" y="4" width="8" height="7" fill="#fff"/><rect x="18" y="4" width="8" height="7" fill="#111"/><rect x="26" y="4" width="8" height="7" fill="#fff"/><rect x="34" y="4" width="8" height="7" fill="#111"/><rect x="10" y="11" width="8" height="7" fill="#111"/><rect x="18" y="11" width="8" height="7" fill="#fff"/><rect x="26" y="11" width="8" height="7" fill="#111"/><rect x="34" y="11" width="8" height="7" fill="#fff"/><rect x="10" y="18" width="8" height="7" fill="#fff"/><rect x="18" y="18" width="8" height="7" fill="#111"/><rect x="26" y="18" width="8" height="7" fill="#fff"/><rect x="34" y="18" width="8" height="7" fill="#111"/></svg>
+    </div>
+  </section>
+
+  <details class="adulto" id="panel-adulto">
+    <summary>Para el adulto</summary>
+    <div class="controles">
+      <div class="grupo">
+        <button class="btn verde" id="btn-verde" type="button">Dar turno (verde)</button>
+        <button class="btn rojo" id="btn-rojo" type="button">Terminar turno (rojo)</button>
+      </div>
+      <label class="campo" for="sel-espera">Espera en amarillo
+        <select id="sel-espera">
+          <option value="0">La decido yo</option>
+          <option value="3">3 segundos</option>
+          <option value="5" selected>5 segundos</option>
+          <option value="10">10 segundos</option>
+        </select>
+      </label>
+      <label class="campo" for="sel-habla">Tiempo para hablar
+        <select id="sel-habla">
+          <option value="0" selected>Sin límite</option>
+          <option value="20">20 segundos</option>
+          <option value="40">40 segundos</option>
+          <option value="60">1 minuto</option>
+        </select>
+      </label>
+      <label class="campo" for="sel-meta">Meta de la carrera
+        <select id="sel-meta">
+          <option value="3">3 esperas</option>
+          <option value="5" selected>5 esperas</option>
+          <option value="8">8 esperas</option>
+        </select>
+      </label>
+      <button class="btn gris" id="btn-reinicio" type="button">Reiniciar carrera</button>
+      <p class="atajos">Atajos para el adulto: <kbd>V</kbd> verde, <kbd>R</kbd> rojo, <kbd>Esc</kbd> sale del modo sesión. El coche solo avanza cuando Martín pide turno y espera en amarillo hasta el verde.</p>
+    </div>
+  </details>
+</div>
+
+<button class="chip salir" id="btn-salir" type="button" hidden>Salir</button>
+
+<div class="fiesta" id="fiesta" hidden>
+  <div class="caja">
+    <div class="grande">¡Meta!</div>
+    <p>Has esperado tu turno muy bien.</p>
+    <button class="btn verde" id="btn-otra" type="button">Otra carrera</button>
+  </div>
+</div>
+
+<template id="ic-rojo"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 26c0-9 6-16 14-16s14 7 14 16c0 7-4 10-7 13s-3 7-3 10c0 5-4 8-8 8s-7-3-7-6"/><path d="M28 27c0-4 3-7 6-7s6 3 6 7c0 3-3 4-4 6"/></svg></template>
+<template id="ic-ambar"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 34V14a4 4 0 0 1 8 0v16"/><path d="M30 28V10a4 4 0 0 1 8 0v18"/><path d="M38 28V13a4 4 0 0 1 8 0v21"/><path d="M46 30v-6a4 4 0 0 1 8 0v12c0 12-8 20-19 20h-3c-8 0-12-4-16-10l-6-10a4 4 0 0 1 7-4l5 6"/></svg></template>
+<template id="ic-verde"><svg viewBox="0 0 64 64" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 14h48v28H30l-13 11V42H8z"/><path d="M20 28h0.1M32 28h0.1M44 28h0.1" stroke-width="7"/></svg></template>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const luces = { rojo: $('luz-rojo'), ambar: $('luz-ambar'), verde: $('luz-verde') };
+  const TEXTOS = {
+    rojo:  ['Escucho', 'Ahora habla otra persona'],
+    ambar: ['Espero', 'Muy pronto es mi turno'],
+    verde: ['¡Hablo yo!', 'Es mi turno: te escuchamos']
+  };
+  const guardado = (() => { try { return JSON.parse(localStorage.getItem('semaforo-ajustes') || '{}'); } catch (e) { return {}; } })();
+  const ajustes = Object.assign({ espera: 5, habla: 0, meta: 5, sonido: false }, guardado);
+  let estado = 'rojo', puntos = 0, tEspera = null, tHabla = null, audio = null;
+
+  function guardar() { try { localStorage.setItem('semaforo-ajustes', JSON.stringify(ajustes)); } catch (e) {} }
+  function pitido(f, d) {
+    if (!ajustes.sonido) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, audio.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25, audio.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + d);
+      o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + d + 0.05);
+    } catch (e) {}
+  }
+  function limpiar() { clearInterval(tEspera); clearInterval(tHabla); tEspera = tHabla = null; $('cuenta').innerHTML = ''; $('barra').hidden = true; }
+
+  function poner(nuevo) {
+    const venia = estado;
+    limpiar();
+    estado = nuevo;
+    for (const k in luces) luces[k].classList.toggle('on', k === nuevo);
+    $('picto').dataset.c = nuevo; $('picto').innerHTML = $('ic-' + nuevo).innerHTML;
+    $('estado').textContent = TEXTOS[nuevo][0]; $('sub').textContent = TEXTOS[nuevo][1];
+    $('btn-quiero').setAttribute('aria-disabled', nuevo === 'rojo' ? 'false' : 'true');
+    $('btn-quiero-txt').textContent = nuevo === 'rojo' ? 'Quiero hablar' : nuevo === 'ambar' ? 'Esperando…' : 'Te escuchamos';
+    if (nuevo === 'ambar') { pitido(520, .25); empezarEspera(); }
+    if (nuevo === 'verde') { pitido(780, .35); if (venia === 'ambar') premiar(); empezarHabla(); }
+  }
+  function empezarEspera() {
+    const s = Number(ajustes.espera); if (!s) return;
+    const c = $('cuenta'); c.innerHTML = '<i></i>'.repeat(s);
+    let quedan = s;
+    tEspera = setInterval(() => {
+      quedan--; const bolas = c.querySelectorAll('i'); if (bolas[quedan]) bolas[quedan].classList.add('gastado');
+      if (quedan <= 0) poner('verde');
+    }, 1000);
+  }
+  function empezarHabla() {
+    const s = Number(ajustes.habla); if (!s) return;
+    $('barra').hidden = false; const inn = $('barra-in'); inn.style.transition = 'none'; inn.style.width = '100%';
+    let quedan = s; requestAnimationFrame(() => { inn.style.transition = ''; });
+    tHabla = setInterval(() => { quedan--; inn.style.width = (quedan / s * 100) + '%'; if (quedan <= 0) poner('rojo'); }, 1000);
+  }
+  function pintarCarrera() {
+    const meta = Number(ajustes.meta);
+    $('paradas').innerHTML = Array.from({ length: meta + 1 }, (_, i) => `<b class="${i <= puntos ? 'hecha' : ''}"></b>`).join('');
+    const pista = $('coche').parentElement.clientWidth;
+    const ini = 23, fin = pista - 67;
+    $('coche').style.left = (ini + (fin - ini) * Math.min(puntos, meta) / meta) + 'px';
+    $('marcador').textContent = `${puntos} de ${meta} esperas`;
+  }
+  function premiar() {
+    puntos++; pintarCarrera();
+    if (puntos >= Number(ajustes.meta)) setTimeout(() => { $('fiesta').hidden = false; pitido(660, .2); setTimeout(() => pitido(880, .4), 220); }, 900);
+  }
+
+  /* Pantalla completa: se intenta la del navegador; si el marco no la permite, se entra igualmente en modo sesión */
+  function modoSesion(on) {
+    document.body.classList.toggle('sesion', on); $('btn-salir').hidden = !on;
+    $('btn-pantalla').textContent = on ? 'Salir de pantalla completa' : 'Pantalla completa';
+    setTimeout(pintarCarrera, 50);
+  }
+  async function entrar() {
+    modoSesion(true);
+    const el = document.documentElement;
+    try { if (el.requestFullscreen) await el.requestFullscreen(); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } catch (e) {}
+    try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+  async function salir() {
+    modoSesion(false);
+    try { if (document.fullscreenElement) await document.exitFullscreen(); } catch (e) {}
+  }
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('sesion')) { /* sigue en modo sesión hasta pulsar Salir */ } });
+
+  $('btn-quiero').addEventListener('click', () => {
+    if (estado === 'rojo') poner('ambar');
+    else { const l = luces[estado]; l.classList.remove('sacudir'); void l.offsetWidth; l.classList.add('sacudir'); }
+  });
+  $('btn-verde').addEventListener('click', () => poner('verde'));
+  $('btn-rojo').addEventListener('click', () => poner('rojo'));
+  $('btn-reinicio').addEventListener('click', () => { puntos = 0; pintarCarrera(); });
+  $('btn-otra').addEventListener('click', () => { $('fiesta').hidden = true; puntos = 0; pintarCarrera(); poner('rojo'); });
+  $('btn-pantalla').addEventListener('click', () => document.body.classList.contains('sesion') ? salir() : entrar());
+  $('btn-salir').addEventListener('click', salir);
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'SELECT') return;
+    if (e.key === 'v' || e.key === 'V') poner('verde');
+    if (e.key === 'r' || e.key === 'R') poner('rojo');
+    if (e.key === 'Escape' && document.body.classList.contains('sesion')) salir();
+  });
+  const selE = $('sel-espera'), selH = $('sel-habla'), selM = $('sel-meta');
+  selE.value = String(ajustes.espera); selH.value = String(ajustes.habla); selM.value = String(ajustes.meta);
+  selE.addEventListener('change', () => { ajustes.espera = Number(selE.value); guardar(); });
+  selH.addEventListener('change', () => { ajustes.habla = Number(selH.value); guardar(); });
+  selM.addEventListener('change', () => { ajustes.meta = Number(selM.value); guardar(); pintarCarrera(); });
+  const bS = $('btn-sonido');
+  const pintarSonido = () => { bS.textContent = 'Sonido: ' + (ajustes.sonido ? 'sí' : 'no'); bS.setAttribute('aria-pressed', String(ajustes.sonido)); };
+  bS.addEventListener('click', () => { ajustes.sonido = !ajustes.sonido; guardar(); pintarSonido(); pitido(660, .15); });
+  window.addEventListener('resize', pintarCarrera);
+  pintarSonido(); estado = 'rojo'; poner('rojo'); pintarCarrera();
+})();
+</script>
+
+</body></html>
