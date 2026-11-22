@@ -98,8 +98,9 @@ const POS=[['moneda','🪙',3,3,'d'],['helado','🍦',3,3,'d'],['espada','🗡�
  ['pera','🍐',2,2,'r'],['jirafa','🦒',3,2,'r'],['mariposa','🦋',4,2,'r'],['corona','👑',3,2,'r'],['cereza','🍒',3,2,'r'],['sirena','🧜‍♀️',3,2,'r'],['tijera','✂️',3,3,'r'],['canguro','🦘',3,3,'r'],['zanahoria','🥕',4,4,'r'],['pirata','🏴‍☠️',3,2,'r'],['oreja','👂',3,2,'r']];
 const SF=[[['mo','ne','da'],2,'🪙'],[['he','la','do'],2,'🍦'],[['es','pa','da'],2,'🗡️'],[['ni','do'],1,'🪺'],[['me','du','sa'],1,'🪼'],[['can','da','do'],2,'🔒'],
  [['pe','ra'],1,'🍐'],[['ji','ra','fa'],1,'🦒'],[['co','ro','na'],1,'👑'],[['ce','re','za'],1,'🍒'],[['si','re','na'],1,'🧜‍♀️'],[['can','gu','ro'],2,'🦘'],[['ti','je','ra'],2,'✂️'],[['ma','ri','po','sa'],1,'🦋'],[['o','re','ja'],1,'👂'],[['pi','ra','ta'],1,'🏴‍☠️'],[['ca','ra','me','lo'],1,'🍬']];
-const CAMBIA=[['peda','pera','🍐','d','r'],['lodo','loro','🦜','d','r'],['cada','cara','😊','d','r'],['odeja','oreja','👂','d','r'],['codona','corona','👑','d','r'],['todo','toro','🐂','d','r'],['sidena','sirena','🧜‍♀️','d','r'],
- ['daro','dado','🎲','r','d'],['niro','nido','🪺','r','d'],['monera','moneda','🪙','r','d'],['helaro','helado','🍦','r','d'],['merusa','medusa','🪼','r','d'],['espara','espada','🗡️','r','d']];
+const CAMBIA=[['pera','🍐','r','d','peda','pesa'],['loro','🦜','r','d','lodo','loco'],['toro','🐂','r','d','todo','topo'],['cara','😊','r','d','cada','casa'],['corona','👑','r','d','codona','cotona'],['sirena','🧜‍♀️','r','d','sidena','sisena'],
+ ['nido','🪺','d','r','niro','nito'],['moneda','🪙','d','r','monera','moneta'],['helado','🍦','d','r','helaro','helato'],['medusa','🪼','d','r','merusa','mecusa'],['espada','🗡️','d','r','espara','espaca'],['nudo','🪢','d','r','nuro','nuto'],
+ ['moda','','d','r','mora','mota'],['codo','','d','r','coro','coco'],['mido','','d','r','miro','mito']];
 const SON=[['dado','🎲',4],['nido','🪺',4],['pera','🍐',4],['toro','🐂',4],['loro','🦜',4],['cara','😊',4],['nudo','🪢',4],['oreja','👂',5],['moneda','🪙',6],['corona','👑',6],['sirena','🧜‍♀️',6],['medusa','🪼',6],['jirafa','🦒',6],['cereza','🍒',6],['espada','🗡️',6],['oro','🥇',3],['ola','🌊',3],['diente','🦷',6]];
 const PS={d:['madipo','tedusa','podame','fidaso','sudeta','nodime','tadume'],r:['maripe','teruso','pirame','furaso','sorepa','nirime','meruta']};
 const ORD=['1.º','2.º','3.º','4.º'];
@@ -112,10 +113,10 @@ const JUEGOS=[
   gen:()=>pick(SF,RONDAS).map(([sil,i,e])=>{const b=sil[i],c=b[0],v=b.slice(1),sw=(c==='d'?'r':'d')+v,ov=c+pick(['a','e','i','o','u'].filter(x=>x!==v),1)[0];
    return {ok:b,escena:`<div class="dibujo">${e}</div><div class="palabra">${sil.map((s,j)=>j===i?'<span class="sil hueco" id="hueco">?</span>':`<span class="sil">${s}</span>`).join('')}</div>`,ops:sh([b,sw,ov]).map(o=>({v:o,t:o})),
     alAcertar:()=>{const h=document.getElementById('hueco');h.textContent=b;h.classList.remove('hueco')}}})},
- {id:'cambia',ico:'🔁',nombre:'Cambia el sonido',desc:'Cambia d por r (o r por d) y descubre el dibujo.',
-  gen:()=>pick(CAMBIA,RONDAS).map(([src,dst,e,a,b])=>{const otros=pick(CAMBIA.filter(x=>x[1]!==dst),2).map(x=>x[2]);
-   return {ok:dst,consigna:`Escucha la palabra. Cambia la <b>${a}</b> por la <b>${b}</b>. ¿Qué dibujo sale?`,escena:`<div class="dibujo">${a==='d'?'🐉':'🧚'}➜${b==='d'?'🐉':'🧚'}</div>${adulto(src)}`,
-    ops:sh([[dst,e],...pick(CAMBIA.filter(x=>x[1]!==dst),2).map(x=>[x[1],x[2]])]).map(([w,em])=>({v:w,t:em,emo:1}))}})},
+ {id:'cambia',ico:'🔁',nombre:'Cambia el sonido',desc:'Cambia d por r (o r por d): ¿qué palabra sale?',
+  gen:()=>pick(CAMBIA,RONDAS).map(([o,e,a,b,ok,dis])=>({ok,consigna:`Lee la palabra. Cambia la <b>${a}</b> por la <b>${b}</b>. ¿Qué palabra sale?`,
+    escena:`${e?`<div class="dibujo">${e}</div>`:''}<div class="palabra"><span class="sil">${o}</span></div><div class="dibujo" style="font-size:44px">${a==='d'?'🐉':'🧚'} ➜ ${b==='d'?'🐉':'🧚'}</div>`,
+    ops:sh([ok,o,dis]).map(w=>({v:w,t:w}))}))},
  {id:'sonidos',ico:'🔢',nombre:'Cuenta los sonidos',desc:'¿Cuántos sonidos tiene la palabra?',consigna:'Di la palabra muy despacio, sonido a sonido. ¿Cuántos sonidos tiene?',
   gen:()=>pick(SON,RONDAS).map(([w,e,n])=>({ok:String(n),escena:`<div class="dibujo">${e}</div>`,ops:[3,4,5,6].map(k=>({v:String(k),t:String(k)}))}))},
  {id:'magicas',ico:'🪄',nombre:'Palabras mágicas largas',desc:'Palabras inventadas de tres trozos.',consigna:'Es una palabra inventada y larga. ¿Tiene la d de Dida o la r de Mara?',
