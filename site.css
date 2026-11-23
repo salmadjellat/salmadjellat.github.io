@@ -54,7 +54,7 @@ header.site{position:sticky;top:0;z-index:50;background:rgba(251,247,242,.92);ba
 @media (max-width:420px){.brand-name{font-size:18px}.brand svg{width:38px;height:38px}}
 
 /* ---------- botones ---------- */
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:16px;text-decoration:none;border-radius:999px;padding:14px 26px;border:1.5px solid transparent;transition:background .15s,color .15s,border-color .15s,transform .15s;cursor:pointer}
+.btn{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:16px;text-decoration:none;border-radius:999px;padding:14px 26px;border:1.5px solid transparent;transition:background .15s,color .15s,border-color .15s,transform .15s;cursor:pointer}
 .btn.primary{background:var(--brown);color:#fff}
 .btn.primary:hover{background:var(--brown-deep)}
 .btn.ghost{background:transparent;color:var(--brown-deep);border-color:var(--hairline)}
@@ -400,3 +400,7 @@ footer.site a:hover{text-decoration:underline}
 .post.destacado .eyebrow{color:var(--pink)}
 .post.destacado a.btn{margin-top:18px}
 @media (max-width:700px){.post.destacado{grid-template-columns:1fr}}
+.muestra{margin-top:26px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;background:var(--pink-soft);border:none}
+.muestra b{display:block;font-family:var(--serif);font-size:22px;font-weight:500}
+.muestra span{color:var(--ink-soft);font-size:15.5px}
+@media (max-width:520px){.muestra{flex-direction:column;align-items:flex-start}}
