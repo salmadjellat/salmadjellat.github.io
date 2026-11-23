@@ -221,12 +221,12 @@ function pickNuevo(a,n){const base=sh(a).slice(0,n);if(!PICK_CTX)return base;con
 function enviarSalma(txt){location.href='https://wa.me/34614245087?text='+encodeURIComponent(txt)}
 function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=document.createElement('div');d.className='wa-caja';
  d.innerHTML='<label class="com-l">💬 ¿Queréis contarle algo a Salma? <span>(opcional)</span></label><textarea class="com-t" rows="3" placeholder="Por ejemplo: le ha costado la r, se cansó al final, lo ha hecho solo…"></textarea><button class="wa-btn mail">✉️ Enviar a Salma</button><button class="wa-otro">o enviarlo por WhatsApp</button><div class="env-ok"></div>';
- const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');
+ const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');ta.addEventListener('input',()=>{if(ok.textContent.startsWith('✅'))ok.textContent=''});
  bm.onclick=async()=>{bm.disabled=true;bm.textContent='Enviando…';const com=ta.value.trim();const l=base.split('\n');
-  try{const r=await fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+  const ac=new AbortController(),to=setTimeout(()=>ac.abort(),12000);try{const r=await fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{signal:ac.signal,method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
    body:JSON.stringify({_subject:'Juegos en casa · '+l[0].replace('📊 ',''),_template:'box',_captcha:'false','Juego':l[0].replace('📊 ',''),'Resultado':(l[1]||'').replace('✅ ',''),'Fecha':(l[2]||'').replace('📅 ',''),'Comentario de la familia':com||'(sin comentario)'})});
-   if(!r.ok)throw 0;bm.remove();d.querySelector('.wa-otro').remove();ta.disabled=true;ok.textContent='✅ ¡Enviado a Salma! Gracias.'}
-  catch(e){bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'}};
+   clearTimeout(to);if(!r.ok)throw 0;ta.value='';bm.disabled=false;bm.textContent='✉️ Enviar otro comentario';ok.textContent='✅ ¡Enviado a Salma! Gracias.'}
+  catch(e){clearTimeout(to);bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'}};
  d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
 function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
 {const _f2=final;final=function(){const r=_f2.apply(this,arguments);try{const j=JUEGOS.find(x=>x.id===J.id);const p=J.primera||0;
