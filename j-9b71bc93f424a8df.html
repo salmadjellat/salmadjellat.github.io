@@ -20,7 +20,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #7FB1
 .tx span{font-size:16px;color:var(--soft);line-height:1.4}
 .arr{font-family:'Fredoka',sans-serif;font-size:28px;color:#5DBB63}
 .out{align-self:center;background:none;border:2px solid var(--line);border-radius:999px;padding:8px 18px;color:var(--soft);font-weight:800;font-size:14px}
-</style></head><body><div class="wrap">
+.game.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.game.cerrado:hover{transform:none}.candado{font-size:13px;font-weight:800;color:#8A6E5C;background:#F1E8DC;border-radius:999px;padding:2px 10px;align-self:flex-start}
+</style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head><body><div class="wrap">
 <div class="lab">Logopedia · Salma Djellat</div>
 <h1>¡Hola, Izan!</h1>
 <p>Estos son tus juegos. Elige uno para empezar.</p>
@@ -29,4 +30,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #7FB1
 <div class="foot">Salma Djellat · Logopeda</div>
 </div>
 <script>document.getElementById('out').onclick=()=>{try{localStorage.removeItem('zona')}catch(e){};location.href='zona-f1cda2.html'};</script>
+<script>function candados(){if(!window.ROT)return;const N='Izan',a=ROT.actual(N),h=ROT.hechoHoy(N);
+ document.querySelectorAll('a.game').forEach(el=>{if(!el.dataset.h)el.dataset.h=el.getAttribute('href');const hh=el.dataset.h,k=hh.indexOf('#')>=0?hh.split('#')[1]:hh.replace(/^j-[0-9a-f]+-/,'').replace('.html','');
+  let ab,txt;if(!ROT.enRotacion(N,k)){ab=true;txt=''}else{ab=ROT.abierto(N,k);txt=ab?'⭐ Juego de hoy':(k===a&&h?'✅ Hecho hoy':'🔒 Otro día')}
+  el.classList.toggle('cerrado',!ab);if(!ab){el.removeAttribute('href');el.setAttribute('aria-disabled','true')}else{el.setAttribute('href',el.dataset.h);el.removeAttribute('aria-disabled')}
+  const t=el.querySelector('.tx');const b=t&&t.querySelector('.candado');if(b)b.remove();if(txt&&t)t.insertAdjacentHTML('beforeend','<span class="candado">'+txt+'</span>')})}candados();addEventListener('pageshow',candados);</script>
 </body></html>

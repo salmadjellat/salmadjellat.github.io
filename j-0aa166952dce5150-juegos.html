@@ -79,7 +79,12 @@ h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0
 .nota b{color:var(--tinta)}
 @media (max-width:560px){.menu{grid-template-columns:1fr}.sil{min-width:86px}.porteria{min-height:110px;font-size:52px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style></head><body>
+.com-l{font-weight:800;color:#4A3326;background:rgba(255,255,255,.9);border-radius:10px;padding:4px 10px}.com-l span{font-weight:600;color:#7A6252;font-size:13px}.com-t{width:100%;font:inherit;font-size:16px;border:2px solid #E8D9C5;border-radius:14px;padding:10px;resize:vertical;background:#fff;color:#4A3326}.wa-btn.mail{background:#6F4A30}.wa-otro{font:inherit;font-weight:800;background:rgba(255,255,255,.9);border:2px solid #25D366;color:#1E8E4C;border-radius:999px;padding:8px 16px;cursor:pointer}.env-ok{font-weight:800;color:#2E6B47;background:rgba(255,255,255,.9);border-radius:10px;padding:2px 10px;min-height:0}.env-ok:empty{display:none}
+.wa-caja{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px auto 0;max-width:420px;width:100%;text-align:center}.wa-btn{font:inherit;font-weight:800;font-size:17px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}.wa-caja small{color:#7A6252;background:rgba(255,255,255,.85);border-radius:10px;padding:4px 10px;font-size:13px}
+.juego.hoy{box-shadow:0 0 0 4px #F2C94C,0 8px 20px rgba(0,0,0,.12)}.hoy-b{background:#FFF3C4!important;color:#8A6A00!important}.dia-msg{background:rgba(255,255,255,.92);color:#4A3326;border-radius:16px;padding:10px 14px;font-weight:700;margin:4px 0 10px;text-align:center}
+.juego.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.juego.cerrado:hover{transform:none}.candado{display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#8A6E5C;background:#F1E8DC;border-radius:999px;padding:2px 10px}.modal-cod{position:fixed;inset:0;background:rgba(40,25,15,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.caja-cod{background:#fff;border-radius:22px;padding:22px;max-width:360px;width:100%;text-align:center;color:#4A3326;font-family:Nunito,Verdana,sans-serif}.caja-cod b{font-size:20px}.caja-cod p{margin:6px 0 12px;color:#7A6252}.caja-cod input{width:100%;font:inherit;font-size:24px;font-weight:800;text-align:center;letter-spacing:.12em;padding:10px;border:2px solid #E8D9C5;border-radius:14px;text-transform:uppercase}.err-cod{color:#A2403B;font-weight:700;min-height:22px;margin-top:6px;font-size:14px}.bts-cod{display:flex;gap:10px;margin-top:8px}.bts-cod button{flex:1;font:inherit;font-weight:800;border-radius:14px;padding:12px;border:2px solid #E8D9C5;background:#fff;color:#6F4A30;cursor:pointer}.bts-cod .cod-si{background:#6F4A30;color:#fff;border-color:#6F4A30}.tengo-cod{display:block;margin:14px auto 0;font:inherit;font-weight:800;background:#fff;color:#6F4A30;border:2px dashed #C9B6A0;border-radius:999px;padding:10px 18px;cursor:pointer}
+.aviso-cerrado{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4A3326;color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;z-index:99;max-width:90vw;text-align:center}
+</style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head><body>
 <div class="wrap" id="app"></div>
 <script>
 const E={casa:'🏠',silla:'🪑',luna:'🌙',sapo:'🐸',pato:'🦆',gato:'🐱',foca:'🦭',vaca:'🐄',mono:'🐒',lobo:'🐺',pera:'🍐',dado:'🎲',rosa:'🌹',nube:'☁️',coche:'🚗',uvas:'🍇',oso:'🐻',moto:'🏍️',cama:'🛏️',sopa:'🍲',bota:'👢',seta:'🍄',sandía:'🍉',tambor:'🥁',limón:'🍋',
@@ -89,7 +94,7 @@ mariposa:'🦋',elefante:'🐘',cocodrilo:'🐊',bicicleta:'🚲',calabaza:'🎃
 mano:'✋',nariz:'👃',ratón:'🐭',tomate2:'🍅',árbol:'🌳',isla:'🏝️',
 boca:'👄',rana:'🐸',camión:'🚚',león:'🦁',corazón:'❤️',abeja:'🐝',oveja:'🐑',lechuga:'🥬',espejo:'🪞',chocolate:'🍫',ventana:'🪟'};
 const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const pick=(a,n)=>sh(a).slice(0,n);
+const pick=(a,n)=>pickNuevo(a,n);
 const RONDAS=8;
 const app=document.getElementById('app');
 let goles=0; try{goles=+localStorage.getItem('clara-estrellas')||0}catch(e){}
@@ -180,7 +185,7 @@ function pintar(){
   if(J.id.startsWith('dm')){
     const dib=J.id==='dm1'?it.e:(J.id==='dm2'?'👂':'🪄');
     cuerpo=`<div class="titulo">Dida y Mara</div><div class="consigna">Escucha la palabra. ¿Tiene la d de Dida o la r de Mara?</div>
-    <div class="dibujo">${dib}</div><button class="adulto" onclick="this.textContent=this.dataset.w;this.classList.add('visto')" data-w="«${it.w}»">👀 Palabra (solo para el adulto)</button>
+    <div class="dibujo">${dib}</div><button class="adulto" onclick="verPal(this)" data-w="«${it.w}»">👀 Palabra (solo para el adulto)</button>
     <div class="personajes"><button class="pers" data-v="d"><span class="cara">🐉</span><b>Dida</b><span>d</span></button><button class="pers" data-v="r"><span class="cara">🧚</span><b>Mara</b><span>r</span></button></div>`;
   }
   app.innerHTML=cabecera()+`<div class="campo" id="campo">${cuerpo}<div class="msg" id="msg"></div></div>`;
@@ -201,7 +206,7 @@ function responder(btn){
     J.bloq=true;btn.classList.add('ok');goles++;guardar();
     if(J.id==='termina'){const h=document.getElementById('hueco');h.textContent=btn.dataset.v;h.classList.remove('hueco')}
     const g=document.createElement('div');g.className='gol';g.textContent=BIEN[Math.floor(Math.random()*BIEN.length)];document.getElementById('campo').appendChild(g);
-    setTimeout(()=>{J.bloq=false;J.ronda++;pintar()},1200);
+    setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1200);
   }else{
     J.fallos++;btn.classList.add('mal');btn.disabled=true;
     document.getElementById('msg').textContent=J.fallos>=2?'¡Mira la que brilla!':'¡Casi! Prueba otra vez.';
@@ -215,6 +220,43 @@ function final(){
   <div class="btns"><button class="btn" id="otra">Jugar otra vez</button><button class="btn blanco" id="menu">Otros juegos</button></div></div></div>`;
   document.getElementById('volver').onclick=menu;document.getElementById('menu').onclick=menu;document.getElementById('otra').onclick=()=>empezar(J.id);
 }
+/* ---------- juego del día (abiertos.js) ---------- */
+const NINO='Clara';
+let PICK_CTX=null;
+function abierto(id){return !window.ROT||ROT.abierto(NINO,id)}
+function msgCerrado(id){if(!window.ROT)return '';const a=ROT.actual(NINO);if(ROT.hechoHoy(NINO))return '✅ ¡Juego de hoy hecho! Mañana toca «'+ROT.nombre(NINO,ROT.siguiente(NINO))+'».';return '🔒 Hoy toca «'+ROT.nombre(NINO,a)+'».'}
+function verPal(b){if(!b.dataset.l)b.dataset.l=b.innerHTML;const v=b.classList.toggle('visto');b.innerHTML=v?b.dataset.w+' <small style="opacity:.75">· ocultar</small>':b.dataset.l}
+function avisoCerrado(txt){let a=document.querySelector('.aviso-cerrado');if(!a){a=document.createElement('div');a.className='aviso-cerrado';document.body.appendChild(a)}a.textContent=txt;clearTimeout(a._t);a._t=setTimeout(()=>a.remove(),3200)}
+/* palabras y dibujos nuevos en cada vuelta: se evita repetir lo ya salido en ese juego */
+function pickNuevo(a,n){const base=sh(a).slice(0,n);if(!PICK_CTX)return base;const k='vistos-'+NINO+'-'+PICK_CTX;let V;try{V=new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch(e){V=new Set()}
+ const id=x=>JSON.stringify(x);let nuevos=sh(a.filter(x=>!V.has(id(x))));if(nuevos.length<n){a.forEach(x=>V.delete(id(x)));nuevos=nuevos.concat(sh(a.filter(x=>!nuevos.includes(x))))}
+ const r=nuevos.slice(0,n);r.forEach(x=>V.add(id(x)));try{localStorage.setItem(k,JSON.stringify([...V].slice(-600)))}catch(e){}return r}
+{const _m=menu,_e=empezar,_f=final;
+ menu=function(){const r=_m.apply(this,arguments);if(!window.ROT)return r;const a=ROT.actual(NINO),h=ROT.hechoHoy(NINO);
+  document.querySelectorAll('.juego[data-id]').forEach(b=>{const id=b.dataset.id,t=b.querySelector('.t')||b;
+   if(abierto(id)){b.classList.add('hoy');t.insertAdjacentHTML('beforeend','<span class="candado hoy-b">⭐ Juego de hoy</span>');return}
+   b.classList.add('cerrado');b.setAttribute('aria-disabled','true');b.onclick=()=>avisoCerrado(msgCerrado(id));
+   t.insertAdjacentHTML('beforeend','<span class="candado">'+(id===a&&h?'✅ Hecho hoy':'🔒 Otro día')+'</span>')});
+  const m=document.querySelector('.menu');if(m&&!document.querySelector('.dia-msg'))m.insertAdjacentHTML('beforebegin','<div class="dia-msg">'+(h?'✅ ¡Juego de hoy hecho! Mañana toca <b>'+ROT.nombre(NINO,ROT.siguiente(NINO))+'</b>.':'Hoy toca <b>'+ROT.nombre(NINO,a)+'</b>'+(ROT.enRotacion(NINO,a)&&!document.querySelector('.juego[data-id="'+a+'"]')?' (en «Mis juegos»)':'')+'.')+'</div>');
+  return r};
+ empezar=function(id){if(!abierto(id)){menu();avisoCerrado(msgCerrado(id));return}PICK_CTX=id;try{return _e.apply(this,arguments)}finally{PICK_CTX=null}};
+
+function enviarSalma(txt){location.href='https://wa.me/34614245087?text='+encodeURIComponent(txt)}
+function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=document.createElement('div');d.className='wa-caja';
+ d.innerHTML='<label class="com-l">💬 ¿Queréis contarle algo a Salma? <span>(opcional)</span></label><textarea class="com-t" rows="3" placeholder="Por ejemplo: le ha costado la r, se cansó al final, lo ha hecho solo…"></textarea><button class="wa-btn mail">✉️ Enviar a Salma</button><button class="wa-otro">o enviarlo por WhatsApp</button><div class="env-ok"></div>';
+ const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');
+ bm.onclick=async()=>{bm.disabled=true;bm.textContent='Enviando…';const com=ta.value.trim();const l=base.split('\n');
+  try{const r=await fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+   body:JSON.stringify({_subject:'Juegos en casa · '+l[0].replace('📊 ',''),_template:'box',_captcha:'false','Juego':l[0].replace('📊 ',''),'Resultado':(l[1]||'').replace('✅ ',''),'Fecha':(l[2]||'').replace('📅 ',''),'Comentario de la familia':com||'(sin comentario)'})});
+   if(!r.ok)throw 0;bm.remove();d.querySelector('.wa-otro').remove();ta.disabled=true;ok.textContent='✅ ¡Enviado a Salma! Gracias.'}
+  catch(e){bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'}};
+ d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
+{const _f2=final;final=function(){const r=_f2.apply(this,arguments);try{const j=JUEGOS.find(x=>x.id===J.id);const p=J.primera||0;
+  const txt='📊 '+NINO+' · '+(j?j.nombre:J.id)+'\n✅ '+p+' de '+RONDAS+' a la primera\n📅 '+fechaHoy()+(window.ROT?' · vuelta '+ROT.vuelta(NINO):'')+'\n💬 Comentario: ';
+  const fin=document.querySelector('.final')||document.getElementById('app');fin.appendChild(botonWA(txt));const ot=document.getElementById('otra');if(ot&&window.ROT&&!ROT.abierto(NINO,J.id))ot.remove()}catch(e){}return r}}
+ final=(function(g){return function(){if(window.ROT&&J)ROT.completar(NINO,J.id);return g.apply(this,arguments)}})(final);/*if(window.ROT&&J)ROT.completar(NINO,J.id);*/}
+
 const h=location.hash.slice(1);
 if(JUEGOS.some(j=>j.id===h))empezar(h);else menu();
 addEventListener('hashchange',()=>{const k=location.hash.slice(1);if(JUEGOS.some(j=>j.id===k)&&(!J||J.id!==k||J.ronda>=RONDAS))empezar(k)});

@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}</style></head><body>
+<html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}.com-l{font-weight:800;color:#4A3326;background:rgba(255,255,255,.9);border-radius:10px;padding:4px 10px}.com-l span{font-weight:600;color:#7A6252;font-size:13px}.com-t{width:100%;font:inherit;font-size:16px;border:2px solid #E8D9C5;border-radius:14px;padding:10px;resize:vertical;background:#fff;color:#4A3326}.wa-btn.mail{background:#6F4A30}.wa-otro{font:inherit;font-weight:800;background:rgba(255,255,255,.9);border:2px solid #25D366;color:#1E8E4C;border-radius:999px;padding:8px 16px;cursor:pointer}.env-ok{font-weight:800;color:#2E6B47;background:rgba(255,255,255,.9);border-radius:10px;padding:2px 10px;min-height:0}.env-ok:empty{display:none}
+.wa-caja{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px auto 0;max-width:420px;width:100%;text-align:center}.wa-btn{font:inherit;font-weight:800;font-size:17px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}.wa-caja small{color:#7A6252;background:rgba(255,255,255,.85);border-radius:10px;padding:4px 10px;font-size:13px}
+</style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script><script>(function(){function cerr(){return !!(window.ROT&&!ROT.abierto('Martín','sisi-zico'))}function tapa(){if(cerr()){document.body.innerHTML='<div style="font-family:Nunito,Verdana,sans-serif;max-width:520px;margin:80px auto;padding:24px;text-align:center;color:#4A3326"><div style="font-size:56px">🔒</div><h2 style="font-family:Fredoka,sans-serif">Hoy no toca este juego</h2><p style="color:#7A6252">'+(window.ROT&&ROT.hechoHoy('Martín')?'¡Ya has hecho el juego de hoy! Mañana toca otro.':'Hoy toca «'+ROT.nombre('Martín',ROT.actual('Martín'))+'».')+'</p><p><a href="j-41f17b2f1741f6c8.html" style="color:#6F4A30;font-weight:800">← Volver a mis juegos</a></p></div>'}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tapa);else tapa();addEventListener('abiertos',tapa)})();</script></head><body>
 <title>Sisi y Zico</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,7 +60,7 @@ button:focus-visible,select:focus-visible{outline:3px solid #1f6fd1;outline-offs
 .pista-gesto{display:flex;align-items:center;gap:10px;background:#FFF7DD;border:3px solid var(--tinta);border-radius:18px;padding:8px 14px;font:800 16px var(--body);text-align:left}
 .pista-gesto .gesto{width:110px;flex:none}
 .msg{font:600 20px var(--display);min-height:1.3em}
-.palabra{font:800 15px var(--body);color:var(--tinta2);background:#F3EEE9;border-radius:10px;padding:4px 10px}
+.palabra{font:800 15px var(--body);color:var(--tinta2);background:#F3EEE9;border-radius:10px;padding:4px 10px;border:2px dashed #D8C7B5;cursor:pointer;user-select:none}
 
 /* Panel adulto */
 details{background:rgba(255,255,255,.92);border:3px solid var(--tinta);border-radius:16px;padding:2px 14px}
@@ -183,6 +185,7 @@ select{font:700 16px var(--body);color:var(--tinta);background:var(--papel);bord
   const PISTAS={s:[document.querySelector('#bSisi .gesto').outerHTML,'Sisi: lengua escondida y el dedo hace de serpiente, sssss'],z:[document.querySelector('#bZico .gesto').outerHTML,'Zico: la lengua asoma entre los dientes y el dedo la señala, zzzzz']};
   function mostrarPista(k){const p=$('pistaGesto');p.innerHTML=PISTAS[k][0]+'<span>'+PISTAS[k][1]+'</span>';p.hidden=false}
   function ocultarPista(){$('pistaGesto').hidden=true}
+  function ponPal(w){const p=$('palabra');p.hidden=false;p.dataset.w='«'+w+'»';p.classList.remove('visto');p.textContent='👀 Palabra (solo para el adulto)';p.onclick=()=>{const v=p.classList.toggle('visto');p.textContent=v?p.dataset.w+' · ocultar':'👀 Palabra (solo para el adulto)'}}
   function barajar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function rellenar(){
     if(st.nivel===3){const c=[];P.forEach(([a,b])=>{c.push({e:a[0],w:a[1],k:'s',par:[a,b]});c.push({e:b[0],w:b[1],k:'z',par:[a,b]})});st.cola=barajar(c)}
@@ -203,7 +206,7 @@ select{font:700 16px var(--body);color:var(--tinta);background:var(--papel);bord
     const d=$('dibujo');
     pintarDibujo();
     $('palabra').hidden=false;
-    $('palabra').textContent='Di: «'+st.actual.w+'»';
+    ponPal(st.actual.w);
     $('msg').textContent=st.nivel===3?'¿Cuál has oído?':'¿Sisi o Zico?';ocultarPista();
   }
   function pintar(){
@@ -246,9 +249,21 @@ select{font:700 16px var(--body);color:var(--tinta);background:var(--papel);bord
   // Primera tarjeta sin hablar: el audio solo puede sonar tras un toque
   st.actual=st.cola.pop();
   pintarDibujo();
-  $('palabra').hidden=false;$('palabra').textContent='Di: «'+st.actual.w+'»';
+  $('palabra').hidden=false;ponPal(st.actual.w);
   $('msg').textContent=st.nivel===3?'¿Cuál has oído?':'¿Sisi o Zico?';
 })();
 </script>
 
-</body></html>
+<script>
+function enviarSalma(txt){location.href='https://wa.me/34614245087?text='+encodeURIComponent(txt)}
+function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=document.createElement('div');d.className='wa-caja';
+ d.innerHTML='<label class="com-l">💬 ¿Queréis contarle algo a Salma? <span>(opcional)</span></label><textarea class="com-t" rows="3" placeholder="Por ejemplo: le ha costado la r, se cansó al final, lo ha hecho solo…"></textarea><button class="wa-btn mail">✉️ Enviar a Salma</button><button class="wa-otro">o enviarlo por WhatsApp</button><div class="env-ok"></div>';
+ const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');
+ bm.onclick=async()=>{bm.disabled=true;bm.textContent='Enviando…';const com=ta.value.trim();const l=base.split('\n');
+  try{const r=await fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+   body:JSON.stringify({_subject:'Juegos en casa · '+l[0].replace('📊 ',''),_template:'box',_captcha:'false','Juego':l[0].replace('📊 ',''),'Resultado':(l[1]||'').replace('✅ ',''),'Fecha':(l[2]||'').replace('📅 ',''),'Comentario de la familia':com||'(sin comentario)'})});
+   if(!r.ok)throw 0;bm.remove();d.querySelector('.wa-otro').remove();ta.disabled=true;ok.textContent='✅ ¡Enviado a Salma! Gracias.'}
+  catch(e){bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'}};
+ d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
+(function(){const f=document.getElementById('fiesta');if(!f)return;new MutationObserver(()=>{if(f.hidden)return;if(window.ROT)ROT.completar('Martín','sisi-zico');if(!f.querySelector('.wa-caja')){const nv=document.getElementById('selNivel'),mt=document.getElementById('selMeta');const txt='📊 Martín · Sisi y Zico'+(nv?' ('+nv.options[nv.selectedIndex].text+')':'')+'\n✅ Carrera completada'+(mt?' · meta '+mt.value+' aciertos':'')+'\n📅 '+fechaHoy()+'\n💬 Comentario: ';f.appendChild(botonWA(txt))}}).observe(f,{attributes:true,attributeFilter:['hidden']})})();</script></body></html>
