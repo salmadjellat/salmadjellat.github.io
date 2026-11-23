@@ -2,47 +2,102 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://logopediasalmadjellat.com/</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/sobre-mi.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/servicios.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/senales.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/colegios.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/preguntas.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/contacto.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/area-de-juegos.html</loc>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/politica-cookies.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://logopediasalmadjellat.com/aviso-legal.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/senales-por-edades.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/blog-a-que-edad-habla.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/blog-chupete-biberon.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/blog-respiracion-bucal.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-lenguaje.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-articulacion.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-lectoescritura.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-deglucion-atipica.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-atencion-temprana.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://logopediasalmadjellat.com/logopeda-madrid-tea.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
   </url>
 </urlset>
