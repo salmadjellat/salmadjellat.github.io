@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>El laboratorio del gol</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* Un laboratorio de ciencias con pizarra de planos: cuadrícula azul, matraces y balón; cada acierto es un gol. */
+:root{
+  --cesped:#5DBB63; --cesped2:#4FAE56; --linea:#FFFFFF; --cielo:#BFE6FF;
+  --tinta:#23313B; --suave:#5B6B76; --papel:#FFFFFF; --oro:#FFC93C; --rojo:#E5484D; --azul:#2F7DD3; --ok:#1F9D55;
+  --display:'Fredoka','Trebuchet MS',system-ui,sans-serif; --letra:'Andika','Trebuchet MS',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cesped);color:var(--tinta);font-family:var(--display)}
+html{background:#1F4E79}body{background:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(180deg,#1F4E79,#2E7D8C);background-attachment:fixed}
+button{font:inherit;cursor:pointer;border:none;color:inherit;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--oro);outline-offset:3px}
+.wrap{max-width:820px;margin:0 auto;padding-block:14px 30px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.chip{background:var(--papel);border:3px solid var(--tinta);border-radius:999px;padding:8px 16px;font-weight:600;font-size:16px;text-decoration:none;color:var(--tinta);display:inline-flex;gap:6px;align-items:center}
+.marcador{background:var(--tinta);color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+.marcador b{color:var(--oro);font-size:24px}
+h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.25);text-align:center;line-height:1.05}
+.sub{color:#fff;text-align:center;font-size:18px;margin:0;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+/* menú */
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.juego{background:var(--papel);border:4px solid var(--tinta);border-radius:24px;padding:16px;display:flex;align-items:center;gap:14px;text-align:left;box-shadow:0 6px 0 var(--tinta);transition:transform .1s}
+.juego:active{transform:translateY(4px);box-shadow:0 2px 0 var(--tinta)}
+.juego .ico{font-size:44px;line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.juego .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.juego b{font-size:21px}
+.juego span{font-size:15px;color:var(--suave);font-family:var(--letra)}
+.juego .estrellas{color:var(--oro);font-size:16px}
+/* campo de juego */
+.campo{background:var(--papel);border:4px solid var(--tinta);border-radius:28px;padding:18px clamp(12px,3vw,26px) 22px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 7px 0 var(--tinta);position:relative;overflow:hidden}
+.titulo{font-size:22px;font-weight:700;text-align:center}
+.consigna{font-family:var(--letra);font-size:18px;color:var(--suave);text-align:center;margin-top:-10px}
+.dibujo{font-size:clamp(90px,22vw,150px);line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;user-select:none}
+.opciones{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
+.op{min-width:84px;min-height:84px;padding:10px 18px;background:#F4F8FB;border:4px solid var(--tinta);border-radius:22px;font-family:var(--letra);font-weight:700;font-size:clamp(34px,8vw,48px);box-shadow:0 5px 0 var(--tinta);transition:transform .1s,background .2s}
+.op:active{transform:translateY(4px);box-shadow:0 1px 0 var(--tinta)}
+.op.emo{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;font-size:clamp(46px,11vw,64px)}
+.op.ok{background:#D9F7E5;border-color:var(--ok)}
+.op.mal{background:#FFE1E1;animation:sacude .4s;opacity:.5}
+.op.pista{animation:brilla 1s infinite}
+@keyframes sacude{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes brilla{50%{box-shadow:0 0 0 8px var(--oro)}}
+.palabra{display:flex;gap:8px;align-items:center;font-family:var(--letra);font-weight:700;font-size:clamp(46px,12vw,70px)}
+.sil{min-width:110px;text-align:center;padding:4px 14px;border-radius:18px;background:#FFF6D6;border:4px solid var(--tinta)}
+.sil.hueco{background:#fff;border-style:dashed;color:#B9C4CC}
+.balones{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.bal{width:76px;height:76px;border-radius:50%;background:#fff;border:4px solid var(--tinta);font-size:34px;font-weight:700;display:grid;place-items:center;box-shadow:0 5px 0 var(--tinta)}
+.palmas{display:flex;gap:8px;min-height:44px;font-size:34px;font-family:"Noto Color Emoji","Apple Color Emoji",sans-serif}
+.palmar{background:var(--oro);border:4px solid var(--tinta);border-radius:999px;padding:10px 22px;font-size:20px;font-weight:700;box-shadow:0 5px 0 var(--tinta)}
+.porterias{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+.porteria{border:5px solid var(--tinta);border-bottom:none;border-radius:16px 16px 0 0;min-height:140px;background:repeating-linear-gradient(45deg,#fff 0 8px,#E9EEF2 8px 10px),repeating-linear-gradient(-45deg,transparent 0 8px,#E9EEF2 8px 10px);display:grid;place-items:center;font-family:var(--letra);font-weight:700;font-size:64px;position:relative}
+.porteria.ok{background:#D9F7E5}.porteria.mal{animation:sacude .4s}
+.msg{font-size:22px;font-weight:700;min-height:1.3em;text-align:center}
+.gol{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.85);font-size:clamp(46px,12vw,80px);font-weight:700;color:var(--rojo);pointer-events:none;animation:gol 1s forwards}
+@keyframes gol{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.1)}80%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.progreso{display:flex;gap:6px;justify-content:center}
+.progreso i{width:22px;height:22px;border-radius:50%;background:#E3E8EC;border:2px solid var(--tinta);display:block;font-style:normal;font-size:14px;line-height:18px;text-align:center}
+.progreso i.hecho{background:var(--oro)}
+.final{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.trofeo{font-size:110px;font-family:"Noto Color Emoji","Apple Color Emoji",sans-serif;animation:salto 1s infinite}
+@keyframes salto{50%{transform:translateY(-12px)}}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{background:var(--azul);color:#fff;border:4px solid var(--tinta);border-radius:999px;padding:12px 24px;font-size:20px;font-weight:700;box-shadow:0 5px 0 var(--tinta)}
+.btn.blanco{background:#fff;color:var(--tinta)}
+.nota{background:rgba(255,255,255,.92);border-radius:16px;padding:12px 16px;font-family:var(--letra);font-size:15px;line-height:1.5;color:var(--suave)}
+.nota b{color:var(--tinta)}
+@media (max-width:560px){.menu{grid-template-columns:1fr}.sil{min-width:86px}.porteria{min-height:110px;font-size:52px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.com-l{font-weight:800;color:#4A3326;background:rgba(255,255,255,.9);border-radius:10px;padding:4px 10px}.com-l span{font-weight:600;color:#7A6252;font-size:13px}.com-t{width:100%;font:inherit;font-size:16px;border:2px solid #E8D9C5;border-radius:14px;padding:10px;resize:vertical;background:#fff;color:#4A3326}.wa-btn.mail{background:#6F4A30}.wa-otro{font:inherit;font-weight:800;background:rgba(255,255,255,.9);border:2px solid #25D366;color:#1E8E4C;border-radius:999px;padding:8px 16px;cursor:pointer}.env-ok{font-weight:800;color:#2E6B47;background:rgba(255,255,255,.9);border-radius:10px;padding:2px 10px;min-height:0}.env-ok:empty{display:none}
+.wa-caja{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px auto 0;max-width:420px;width:100%;text-align:center}.wa-btn{font:inherit;font-weight:800;font-size:17px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}.wa-caja small{color:#7A6252;background:rgba(255,255,255,.85);border-radius:10px;padding:4px 10px;font-size:13px}
+.juego.hoy{box-shadow:0 0 0 4px #F2C94C,0 8px 20px rgba(0,0,0,.12)}.hoy-b{background:#FFF3C4!important;color:#8A6A00!important}.dia-msg{background:rgba(255,255,255,.92);color:#4A3326;border-radius:16px;padding:10px 14px;font-weight:700;margin:4px 0 10px;text-align:center}
+.juego.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.juego.cerrado:hover{transform:none}.candado{display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#8A6E5C;background:#F1E8DC;border-radius:999px;padding:2px 10px}.modal-cod{position:fixed;inset:0;background:rgba(40,25,15,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.caja-cod{background:#fff;border-radius:22px;padding:22px;max-width:360px;width:100%;text-align:center;color:#4A3326;font-family:Nunito,Verdana,sans-serif}.caja-cod b{font-size:20px}.caja-cod p{margin:6px 0 12px;color:#7A6252}.caja-cod input{width:100%;font:inherit;font-size:24px;font-weight:800;text-align:center;letter-spacing:.12em;padding:10px;border:2px solid #E8D9C5;border-radius:14px;text-transform:uppercase}.err-cod{color:#A2403B;font-weight:700;min-height:22px;margin-top:6px;font-size:14px}.bts-cod{display:flex;gap:10px;margin-top:8px}.bts-cod button{flex:1;font:inherit;font-weight:800;border-radius:14px;padding:12px;border:2px solid #E8D9C5;background:#fff;color:#6F4A30;cursor:pointer}.bts-cod .cod-si{background:#6F4A30;color:#fff;border-color:#6F4A30}.tengo-cod{display:block;margin:14px auto 0;font:inherit;font-weight:800;background:#fff;color:#6F4A30;border:2px dashed #C9B6A0;border-radius:999px;padding:10px 18px;cursor:pointer}
+.aviso-cerrado{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4A3326;color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;z-index:99;max-width:90vw;text-align:center}
+
+.emo{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.nivel-chip{align-self:center;background:#FFC93C;color:#23313B;border:3px solid #23313B;border-radius:999px;padding:6px 16px;font-weight:700;font-size:16px}
+.nota{background:rgba(255,255,255,.92);border-radius:18px;padding:12px 16px;font-family:var(--letra);font-size:16px;line-height:1.45;color:#23313B}
+.opciones.col{flex-direction:column;align-items:center}
+.op.pal{min-width:min(320px,90%);font-size:clamp(30px,8vw,42px);letter-spacing:.04em}
+.modelo{font-family:var(--letra);font-weight:700;font-size:clamp(40px,11vw,60px);letter-spacing:.06em;background:#FFF6D6;border:4px solid var(--tinta);border-radius:20px;padding:4px 26px}
+.rejilla{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.carta{font-family:var(--letra);font-weight:700;letter-spacing:.03em;background:#F4F8FB;border:4px solid var(--tinta);border-radius:18px;padding:16px 4px;box-shadow:0 4px 0 var(--tinta);white-space:nowrap}
+.carta.ok{background:#D9F7E5;border-color:var(--ok)}.carta.mal{background:#FFE1E1;opacity:.5;animation:sacude .4s}.carta.pista{animation:brilla 1s infinite}
+.carta.ok,.op.ok{transform:scale(1.04)}
+.lista{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lista span{font-family:var(--letra);font-weight:700;font-size:22px;background:#EAF3FB;border:3px solid var(--tinta);border-radius:12px;padding:4px 12px}
+.lista span.hallada{background:#D9F7E5;text-decoration:line-through;opacity:.7}
+.sopa{display:grid;gap:4px;width:100%;max-width:480px}
+.le{aspect-ratio:1;font-family:var(--letra);font-weight:700;font-size:clamp(18px,5.4vw,28px);background:#F4F8FB;border:2px solid #9FB3C2;border-radius:8px;padding:0}
+.le.sel{background:#FFC93C;border-color:var(--tinta)}.le.hallada{background:#BDEBD0;border-color:var(--ok)}.le.pista{animation:brilla 1s infinite}
+.lectura{font-family:var(--letra);font-weight:700;letter-spacing:.04em;padding:8px 18px;background:#FFF6D6;border:4px solid var(--tinta);border-radius:22px;text-align:center;white-space:nowrap}
+.crono{font-weight:700;color:var(--suave);font-size:18px;margin-top:-6px}
+.op.adulto-b{font-family:var(--display);font-size:22px;min-height:64px}.op.ok-b{background:#D9F7E5}
+.adulto{background:#fff;border:3px dashed #9FB3C2;border-radius:999px;padding:8px 16px;font-weight:700;font-size:15px;color:var(--suave)}
+.nota-j{font-family:var(--letra);font-size:16px;line-height:1.45;background:#F4F8FB;border-radius:14px;padding:10px 14px;color:var(--tinta);max-width:560px}
+body{min-height:100vh}.modelo{white-space:nowrap}
+</style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const NINO='Arturo';
+let PICK_CTX=null;
+/* ---------- bancos de palabras (animales, ciencia y fútbol) ---------- */
+const DIB={1:[['gato','🐱'],['pato','🦆'],['lobo','🐺'],['foca','🦭'],['mono','🐒'],['vaca','🐄'],['toro','🐂'],['rana','🐸'],['loro','🦜'],['luna','🌙'],['lupa','🔍'],['gota','💧'],['rayo','⚡'],['copa','🏆'],['puma','🐆'],['pulpo','🐙'],['oso','🐻'],['pez','🐟'],['sol','☀️'],['imán','🧲']],
+ 2:[['tigre','🐯'],['cebra','🦓'],['cohete','🚀'],['planeta','🪐'],['trofeo','🏆'],['volcán','🌋'],['cerebro','🧠'],['estrella','⭐'],['cometa','☄️'],['flamenco','🦩'],['cangrejo','🦀'],['gorila','🦍'],['tiburón','🦈'],['brújula','🧭'],['portería','🥅'],['medalla','🏅'],['camiseta','👕'],['caballo','🐴'],['ardilla','🐿️'],['bombilla','💡'],['delfín','🐬'],['búho','🦉']],
+ 3:[['microscopio','🔬'],['telescopio','🔭'],['murciélago','🦇'],['cocodrilo','🐊'],['dinosaurio','🦕'],['mariposa','🦋'],['termómetro','🌡️'],['astronauta','🧑‍🚀'],['pingüino','🐧'],['canguro','🦘'],['elefante','🐘'],['serpiente','🐍'],['satélite','🛰️'],['estadio','🏟️'],['hormiga','🐜'],['tortuga','🐢'],['caracol','🐌'],['ballena','🐋'],['jirafa','🦒'],['camello','🐫']]};
+const REAL={1:['gato','pato','lobo','foca','mono','vaca','toro','rana','loro','luna','lupa','gota','rayo','copa','puma','gol','pase','liga','bota','sapo','pelo','nido','mapa','pico'],
+ 2:['tigre','cebra','pulpo','cohete','planeta','trofeo','volcán','cerebro','estrella','cometa','flamenco','cangrejo','gorila','tiburón','portero','plátano','crema','globo','prisma','cristal','fruta','blanco','trueno','cuerno','golpe','árbitro'],
+ 3:['microscopio','murciélago','cocodrilo','telescopio','dinosaurio','termómetro','astronauta','laboratorio','rinoceronte','hipopótamo','entrenador','delantero','experimento','centrocampista','escarabajo','esqueleto','temperatura','electricidad','chimpancé','constelación']};
+const PSEU={1:['fupe','lomi','dasu','nipo','teba','guli','pafe','boti','mefa','lupo','sidu','nalo','tume','fobi','cume','dapi','rufo','molu','sefi','tago','beli','nuta','pesi','gumo'],
+ 2:['bralo','plimo','trefa','glupo','drima','flaso','presu','blado','grume','tolfa','mesgo','palbu','dorpe','frilo','clamu','pruta','bisno','garpo','lusma','cloti','trinsa','plorte','gresmo','bulpa'],
+ 3:['trapelo','bridomo','grotamel','cluberna','trosdapi','pelsigra','frantomo','bolgreta','dristano','malprede','sontrafe','glimbaro','crespolo','tamplido','brunelsa','flidorta','presmalu','quintabo','gordefla','plastumo']};
+const TODAS=new Set([...Object.values(REAL).flat(),...Object.values(DIB).flat().map(x=>x[0])]);
+const CONF={b:'d',d:'b',p:'q',q:'p',m:'n',n:'m',u:'n',a:'o',o:'a',e:'a',i:'l',l:'i',f:'t',t:'f',r:'n',s:'z',g:'q'};
+const VOC='aeiou';
+/* palabras «casi iguales»: cambia una letra parecida, da la vuelta a dos letras, quita o añade una */
+function casi(w,n){const out=new Set();let tries=0;
+ while(out.size<n&&tries<300){tries++;const a=[...w];const k=Math.floor(Math.random()*4);
+  if(k===0){const i=a.findIndex((c,j)=>CONF[c]&&Math.random()<.5);const j=i>=0?i:a.findIndex(c=>CONF[c]);if(j<0)continue;a[j]=CONF[a[j]]}
+  else if(k===1){const i=1+Math.floor(Math.random()*(a.length-2));if(i>=a.length-1)continue;[a[i],a[i+1]]=[a[i+1],a[i]]}
+  else if(k===2){if(a.length<5)continue;const i=1+Math.floor(Math.random()*(a.length-2));if(VOC.includes(a[i]))continue;a.splice(i,1)}
+  else{const i=1+Math.floor(Math.random()*(a.length-2));const c='rlnms'[Math.floor(Math.random()*5)];if(VOC.includes(a[i]))a.splice(i+1,0,c);else continue}
+  const s=a.join('');if(s!==w&&!TODAS.has(s))out.add(s)}
+ return [...out]}
+const NIVEL=()=>{const v=window.ROT?ROT.vuelta(NINO):1;return Math.min(3,v)};
+const NOMBRES_NIVEL={1:'Nivel 1 · palabras cortas',2:'Nivel 2 · sílabas trabadas',3:'Nivel 3 · palabras largas'};
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>pickNuevo(a,n);
+const RONDAS=8;
+const app=document.getElementById('app');
+let goles=0; try{goles=+localStorage.getItem('arturo-goles')||0}catch(e){}
+let est={}; try{est=JSON.parse(localStorage.getItem('arturo-est')||'{}')}catch(e){}
+const guardar=()=>{try{localStorage.setItem('arturo-goles',goles);localStorage.setItem('arturo-est',JSON.stringify(est))}catch(e){}};
+const EM=s=>`<span class="emo">${s}</span>`;
+const FS=(w,ancho,max)=>`font-size:min(${max}px,calc(${ancho}vw / ${Math.max(w.length,4)*0.62}))`;
+const COLS=a=>Math.max(...a.map(x=>x.length))>8?2:3;
+
+const JUEGOS=[
+ {id:'dibujo',ico:'🔍',nombre:'¿Cuál pone?',desc:'Mira el dibujo y busca dónde pone su nombre.'},
+ {id:'iguales',ico:'🧲',nombre:'Imán de iguales',desc:'Atrapa todas las palabras iguales a la de arriba.'},
+ {id:'pareja',ico:'🧦',nombre:'¿Cuál no tiene pareja?',desc:'Todas van de dos en dos… menos una.'},
+ {id:'repite',ico:'🕵️',nombre:'El intruso',desc:'¿Cuál no se repite? ¡Encuéntrala!'},
+ {id:'sopa',ico:'🧪',nombre:'Sopa de palabras mágicas',desc:'Busca las palabras inventadas escondidas.'},
+ {id:'lectura',ico:'📖',nombre:'Lectura en voz alta',desc:'Lee palabras de animales, ciencia y fútbol.'},
+ {id:'magicas',ico:'🪄',nombre:'Palabras mágicas',desc:'Lee palabras inventadas. ¡No existen!'},
+ {id:'existe',ico:'🦖',nombre:'¿Existe o es inventada?',desc:'Decide si la palabra es de verdad.'},
+];
+const NOTAS={
+ dibujo:'Arturo mira el dibujo y elige dónde pone su nombre. Las otras dos opciones se parecen mucho (letras cambiadas de sitio o parecidas, como b/d o m/n): que lea despacio, letra a letra si lo necesita.',
+ iguales:'Tiene que tocar todas las palabras que son exactamente iguales a la de arriba (hay 3). Si toca una que no es igual, que la compare letra a letra.',
+ pareja:'Las palabras van por parejas iguales, salvo una. Se trata de comparar con atención, no de correr.',
+ repite:'Casi todas las palabras son la misma; una cambia muy poco. Que la busque leyendo cada una entera.',
+ sopa:'Las palabras de la lista son inventadas. Se buscan de izquierda a derecha o de arriba abajo: toca la primera letra y después la última.',
+ lectura:'Arturo lee la palabra en voz alta. Vosotros pulsáis «Bien» si la lee entera y sin errores, o «Le ha costado» si se equivoca o la silabea mucho (en ese caso, leedla juntos una vez). No corrijáis cada sonido: lo importante es que lea con calma.',
+ magicas:'Son palabras inventadas: no se pueden adivinar, hay que leerlas letra a letra. Pulsad «Bien» si la lee sin errores y «Le ha costado» si no; en ese caso, leedla juntos una vez.',
+ existe:'Tiene que leer la palabra y decidir si existe o es inventada. Algunas inventadas se parecen mucho a una de verdad (por ejemplo «tirge» en vez de «tigre»).'};
+
+/* ---------- menú ---------- */
+function menu(){
+  location.hash='';
+  app.innerHTML=`<div class="top"><a class="chip" href="j-c48673a4b07d249b.html">← Mis juegos</a><div class="marcador">⚽ Goles <b>${goles}</b></div></div>
+  <h1>El laboratorio del gol</h1><p class="sub">Elige un experimento. ¡Cada acierto es un gol!</p>
+  <div class="nivel-chip">🔬 ${NOMBRES_NIVEL[NIVEL()]}</div>
+  <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🏆 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
+  <div class="nota"><b>Para el adulto:</b> cada día se abre un juego. Cuando Arturo termina todos, vuelven a empezar con palabras nuevas y un nivel más difícil (hasta el nivel 3). Dentro de cada juego, el botón «👀 Para el adulto» explica qué hacer. Si falla dos veces, la respuesta correcta brilla para ayudarle.</div>`;
+  app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
+}
+
+/* ---------- generadores ---------- */
+let J=null;
+function empezar(id){J={id,ronda:0,fallos:0,primera:0,nivel:NIVEL(),t0:Date.now()};J.items=generar(id);location.hash=id;pintar()}
+function generar(id){
+  const n=J.nivel;
+  if(id==='dibujo')return pick(DIB[n],RONDAS).map(([w,e])=>({w,e,ops:sh([w,...casi(w,2)])}));
+  if(id==='iguales')return Array.from({length:RONDAS},()=>{const w=pick([...REAL[n],...PSEU[n]],1)[0];const f=casi(w,6);const cartas=sh([w,w,w,...f.slice(0,n===1?3:6)]);return {w,cartas}});
+  if(id==='pareja')return Array.from({length:RONDAS},()=>{const ws=sh([...REAL[n],...PSEU[n]]).slice(0,n===1?2:3);const sola=casi(ws[0],1)[0]||ws[0]+'s';return {sola,cartas:sh([...ws.flatMap(w=>[w,w]),sola])}});
+  if(id==='repite')return Array.from({length:RONDAS},()=>{const w=pick([...REAL[n],...PSEU[n]],1)[0];const otra=casi(w,1)[0]||(w.slice(0,-1)+(w.endsWith('a')?'o':'a'));const N=n===1?5:n===2?7:9;const c=Array(N-1).fill(w);c.splice(Math.floor(Math.random()*N),0,otra);return {w,otra,cartas:c}});
+  if(id==='sopa')return [sopa(n),sopa(n)];
+  if(id==='lectura')return pick(REAL[n],RONDAS);
+  if(id==='magicas')return pick(PSEU[n],RONDAS);
+  if(id==='existe'){const r=pick(REAL[n],4).map(w=>({w,k:'si'}));const p=[...pick(PSEU[n],2).map(w=>({w,k:'no'})),...pick(REAL[n],2).map(w=>({w:casi(w,1)[0]||w+'r',k:'no'}))];return sh([...r,...p])}
+}
+function sopa(n){
+  const S=n===1?7:n===2?8:9;const L=n===1?4:n===2?5:7;
+  const ws=sh(PSEU[n].filter(w=>w.length<=S)).slice(0,4);
+  for(let intento=0;intento<200;intento++){
+    const g=Array.from({length:S},()=>Array(S).fill(''));const pos=[];let ok=true;
+    for(const w of ws){let puesto=false;
+      for(let t=0;t<80&&!puesto;t++){const v=Math.random()<.5;const r=Math.floor(Math.random()*(v?S-w.length+1:S)),c=Math.floor(Math.random()*(v?S:S-w.length+1));
+        let cabe=true;for(let i=0;i<w.length;i++){const x=v?r+i:r,y=v?c:c+i;if(g[x][y]&&g[x][y]!==w[i]){cabe=false;break}}
+        if(cabe){for(let i=0;i<w.length;i++){const x=v?r+i:r,y=v?c:c+i;g[x][y]=w[i]}pos.push({w,r,c,v,hallada:false});puesto=true}}
+      if(!puesto){ok=false;break}}
+    if(!ok)continue;
+    const AB='abcdefghijlmnoprstu';for(let x=0;x<S;x++)for(let y=0;y<S;y++)if(!g[x][y])g[x][y]=AB[Math.floor(Math.random()*AB.length)];
+    return {S,g,pos}}
+}
+
+/* ---------- pantalla ---------- */
+function cabecera(){
+  return `<div class="top"><button class="chip" id="volver">← Juegos</button><div class="marcador">⚽ Goles <b>${goles}</b></div></div>
+  <div class="progreso">${Array.from({length:RONDAS},(_,i)=>`<i class="${i<J.ronda?'hecho':''}">${i<J.ronda?'⚽':''}</i>`).join('')}</div>`;
+}
+function notaAdulto(){return `<button class="adulto" onclick="verNota(this)">👀 Para el adulto</button><div class="nota-j" hidden>${NOTAS[J.id]}</div>`}
+function verNota(b){const d=b.nextElementSibling;d.hidden=!d.hidden;b.textContent=d.hidden?'👀 Para el adulto':'🙈 Ocultar'}
+function pintar(){
+  if(J.ronda>=RONDAS)return final();
+  J.fallos=0;const it=J.id==='sopa'?null:J.items[J.ronda];let cuerpo='';const j=JUEGOS.find(x=>x.id===J.id);
+  if(J.id==='dibujo')cuerpo=`<div class="consigna">¿En cuál pone lo que es el dibujo?</div><div class="dibujo">${it.e}</div>
+    <div class="opciones col">${it.ops.map(s=>`<button class="op pal" data-v="${s}">${s}</button>`).join('')}</div>`;
+  if(J.id==='iguales')cuerpo=`<div class="consigna">Toca todas las que son iguales a esta (hay 3):</div><div class="modelo" style="${FS(it.w,78,60)}">${it.w}</div>
+    <div class="rejilla" style="grid-template-columns:repeat(${COLS(it.cartas)},minmax(0,1fr))">${it.cartas.map((s,i)=>`<button class="carta" data-c="${i}" style="${FS(s,COLS(it.cartas)===2?36:26,30)}">${s}</button>`).join('')}</div>`;
+  if(J.id==='pareja')cuerpo=`<div class="consigna">Todas tienen pareja menos una. ¿Cuál es?</div>
+    <div class="rejilla" style="grid-template-columns:repeat(${COLS(it.cartas)},minmax(0,1fr))">${it.cartas.map(s=>`<button class="carta" data-v="${s}" style="${FS(s,COLS(it.cartas)===2?36:26,30)}">${s}</button>`).join('')}</div>`;
+  if(J.id==='repite')cuerpo=`<div class="consigna">Hay una que no se repite. ¡Caza al intruso!</div>
+    <div class="rejilla" style="grid-template-columns:repeat(${COLS(it.cartas)},minmax(0,1fr))">${it.cartas.map(s=>`<button class="carta" data-v="${s}" style="${FS(s,COLS(it.cartas)===2?36:26,30)}">${s}</button>`).join('')}</div>`;
+  if(J.id==='sopa'){const B=J.items[Math.floor(J.ronda/4)];
+    cuerpo=`<div class="consigna">Busca las palabras mágicas → y ↓. Toca la primera letra y luego la última.</div>
+    <div class="lista">${B.pos.map(p=>`<span class="${p.hallada?'hallada':''}">${p.w}</span>`).join('')}</div>
+    <div class="sopa" style="grid-template-columns:repeat(${B.S},1fr)">${B.g.map((f,x)=>f.map((l,y)=>`<button class="le" data-x="${x}" data-y="${y}">${l}</button>`).join('')).join('')}</div>`}
+  if(J.id==='lectura'||J.id==='magicas')cuerpo=`<div class="consigna">${J.id==='lectura'?'Lee la palabra en voz alta.':'Palabra inventada: léela letra a letra.'}</div>
+    <div class="lectura" style="${FS(it,68,84)}">${it}</div><div class="crono" id="crono">⏱️ 0 s</div>
+    <div class="opciones"><button class="op adulto-b ok-b" data-v="bien">✅ Bien</button><button class="op adulto-b" data-v="costado">🔁 Le ha costado</button></div>`;
+  if(J.id==='existe')cuerpo=`<div class="consigna">Lee la palabra. ¿Existe o es inventada?</div><div class="lectura" style="${FS(it.w,68,84)}">${it.w}</div>
+    <div class="opciones"><button class="op pal" data-v="si">✅ Existe</button><button class="op pal" data-v="no">🧪 Inventada</button></div>`;
+  app.innerHTML=cabecera()+`<div class="campo" id="campo"><div class="titulo">${j.ico} ${j.nombre}</div>${cuerpo}<div class="msg" id="msg"></div>${notaAdulto()}</div>`;
+  document.getElementById('volver').onclick=()=>{clearInterval(J.tick);menu()};
+  if(J.id==='iguales')return montarIguales(it);
+  if(J.id==='sopa')return montarSopa();
+  if(J.id==='lectura'||J.id==='magicas'){const t0=Date.now();clearInterval(J.tick);J.tick=setInterval(()=>{const c=document.getElementById('crono');if(c)c.textContent='⏱️ '+Math.round((Date.now()-t0)/1000)+' s'},500)}
+  app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>responder(b));
+}
+function correcta(){const it=J.items[J.ronda];
+  return {dibujo:it.w,pareja:it.sola,repite:it.otra,existe:it.k}[J.id]}
+const BIEN=['⚽ ¡GOL!','¡Golazo!','¡Experimento superado!','¡Crack!','¡Bravo!'];
+function celebrar(){goles++;guardar();const g=document.createElement('div');g.className='gol';g.textContent=BIEN[Math.floor(Math.random()*BIEN.length)];document.getElementById('campo').appendChild(g)}
+function siguiente(ms){J.bloq=true;setTimeout(()=>{J.bloq=false;J.ronda++;pintar()},ms||1200)}
+function responder(btn){
+  if(J.bloq)return;
+  if(J.id==='lectura'||J.id==='magicas'){clearInterval(J.tick);if(btn.dataset.v==='bien'){J.primera++;celebrar()}else{document.getElementById('msg').textContent='¡Leedla juntos una vez y seguimos!'}btn.classList.add('ok');return siguiente(btn.dataset.v==='bien'?1100:2200)}
+  const ok=btn.dataset.v===correcta();
+  if(ok){btn.classList.add('ok');if(J.fallos===0)J.primera++;celebrar();siguiente()}
+  else{J.fallos++;btn.classList.add('mal');btn.disabled=true;
+    document.getElementById('msg').textContent=J.fallos>=2?'¡Mira la que brilla!':'¡Casi! Compara letra a letra.';
+    if(J.fallos>=2)app.querySelectorAll('[data-v]').forEach(b=>{if(b.dataset.v===correcta())b.classList.add('pista')})}
+}
+function montarIguales(it){let hall=0;
+  app.querySelectorAll('.carta').forEach(b=>b.onclick=()=>{if(J.bloq||b.classList.contains('ok'))return;
+    if(b.textContent===it.w){b.classList.add('ok');hall++;if(hall===3){if(J.fallos===0)J.primera++;celebrar();siguiente()}}
+    else{J.fallos++;b.classList.add('mal');b.disabled=true;document.getElementById('msg').textContent='Esa no es igual. ¡Compara letra a letra!';
+      if(J.fallos>=2)app.querySelectorAll('.carta').forEach(c=>{if(c.textContent===it.w&&!c.classList.contains('ok'))c.classList.add('pista')})}})}
+function montarSopa(){const B=J.items[Math.floor(J.ronda/4)];let ini=null;
+  const L=(x,y)=>app.querySelector(`.le[data-x="${x}"][data-y="${y}"]`);
+  B.pos.filter(p=>p.hallada).forEach(p=>{for(let i=0;i<p.w.length;i++)L(p.v?p.r+i:p.r,p.v?p.c:p.c+i).classList.add('hallada')});
+  app.querySelectorAll('.le').forEach(b=>b.onclick=()=>{if(J.bloq)return;const x=+b.dataset.x,y=+b.dataset.y;
+    if(!ini){ini=[x,y];b.classList.add('sel');return}
+    const [x0,y0]=ini;L(x0,y0).classList.remove('sel');ini=null;
+    const p=B.pos.find(p=>!p.hallada&&p.r===Math.min(x0,x)&&p.c===Math.min(y0,y)&&((p.v&&y0===y&&Math.abs(x-x0)===p.w.length-1)||(!p.v&&x0===x&&Math.abs(y-y0)===p.w.length-1)));
+    if(p){p.hallada=true;if(J.fallos===0)J.primera++;J.fallos=0;for(let i=0;i<p.w.length;i++)L(p.v?p.r+i:p.r,p.v?p.c:p.c+i).classList.add('hallada');celebrar();siguiente(900)}
+    else{J.fallos++;document.getElementById('msg').textContent='Ahí no está. Busca la primera letra de una palabra de la lista.';
+      if(J.fallos>=3){const q=B.pos.find(p=>!p.hallada);L(q.r,q.c).classList.add('pista')}}})}
+function final(){clearInterval(J.tick);
+  est[J.id]=(est[J.id]||0)+1;guardar();
+  app.innerHTML=cabecera()+`<div class="campo"><div class="final"><div class="trofeo">🏆</div><div class="titulo" style="font-size:32px">¡Experimento superado!</div>
+  <div class="consigna" style="margin:0">Has marcado ${RONDAS} goles en este juego.</div>
+  <div class="btns"><button class="btn" id="otra">Jugar otra vez</button><button class="btn blanco" id="menu">Otros juegos</button></div></div></div>`;
+  document.getElementById('volver').onclick=menu;document.getElementById('menu').onclick=menu;document.getElementById('otra').onclick=()=>empezar(J.id);
+}
+
+/* ---------- juego del día (abiertos.js) ---------- */
+function abierto(id){return !window.ROT||ROT.abierto(NINO,id)}
+function msgCerrado(id){if(!window.ROT)return '';const a=ROT.actual(NINO);if(ROT.hechoHoy(NINO))return '✅ ¡Juego de hoy hecho! Mañana toca «'+ROT.nombre(NINO,ROT.siguiente(NINO))+'».';return '🔒 Hoy toca «'+ROT.nombre(NINO,a)+'».'}
+function verPal(b){if(!b.dataset.l)b.dataset.l=b.innerHTML;const v=b.classList.toggle('visto');b.innerHTML=v?b.dataset.w+' <small style="opacity:.75">· ocultar</small>':b.dataset.l}
+function avisoCerrado(txt){let a=document.querySelector('.aviso-cerrado');if(!a){a=document.createElement('div');a.className='aviso-cerrado';document.body.appendChild(a)}a.textContent=txt;clearTimeout(a._t);a._t=setTimeout(()=>a.remove(),3200)}
+/* palabras y dibujos nuevos en cada vuelta: se evita repetir lo ya salido en ese juego */
+function pickNuevo(a,n){const base=sh(a).slice(0,n);if(!PICK_CTX)return base;const k='vistos-'+NINO+'-'+PICK_CTX;let V;try{V=new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch(e){V=new Set()}
+ const id=x=>JSON.stringify(x);let nuevos=sh(a.filter(x=>!V.has(id(x))));if(nuevos.length<n){a.forEach(x=>V.delete(id(x)));nuevos=nuevos.concat(sh(a.filter(x=>!nuevos.includes(x))))}
+ const r=nuevos.slice(0,n);r.forEach(x=>V.add(id(x)));try{localStorage.setItem(k,JSON.stringify([...V].slice(-600)))}catch(e){}return r}
+{const _m=menu,_e=empezar,_f=final;
+ menu=function(){const r=_m.apply(this,arguments);if(!window.ROT)return r;const a=ROT.actual(NINO),h=ROT.hechoHoy(NINO);
+  document.querySelectorAll('.juego[data-id]').forEach(b=>{const id=b.dataset.id,t=b.querySelector('.t')||b;
+   if(abierto(id)){b.classList.add('hoy');t.insertAdjacentHTML('beforeend','<span class="candado hoy-b">⭐ Juego de hoy</span>');return}
+   b.classList.add('cerrado');b.setAttribute('aria-disabled','true');b.onclick=()=>avisoCerrado(msgCerrado(id));
+   t.insertAdjacentHTML('beforeend','<span class="candado">'+(id===a&&h?'✅ Hecho hoy':'🔒 Otro día')+'</span>')});
+  const m=document.querySelector('.menu');if(m&&!document.querySelector('.dia-msg'))m.insertAdjacentHTML('beforebegin','<div class="dia-msg">'+(h?'✅ ¡Juego de hoy hecho! Mañana toca <b>'+ROT.nombre(NINO,ROT.siguiente(NINO))+'</b>.':'Hoy toca <b>'+ROT.nombre(NINO,a)+'</b>'+(ROT.enRotacion(NINO,a)&&!document.querySelector('.juego[data-id="'+a+'"]')?' (en «Mis juegos»)':'')+'.')+'</div>');
+  return r};
+ empezar=function(id){if(!abierto(id)){menu();avisoCerrado(msgCerrado(id));return}PICK_CTX=id;try{return _e.apply(this,arguments)}finally{PICK_CTX=null}};
+
+function enviarSalma(txt){location.href='https://wa.me/34614245087?text='+encodeURIComponent(txt)}
+function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=document.createElement('div');d.className='wa-caja';
+ d.innerHTML='<label class="com-l">💬 ¿Queréis contarle algo a Salma? <span>(opcional)</span></label><textarea class="com-t" rows="3" placeholder="Por ejemplo: le ha costado leer las inventadas, se cansó al final, lo ha hecho solo…"></textarea><button class="wa-btn mail">✉️ Enviar a Salma</button><button class="wa-otro">o enviarlo por WhatsApp</button><div class="env-ok"></div>';
+ const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');ta.addEventListener('input',()=>{if(ok.textContent.startsWith('✅'))ok.textContent=''});
+ bm.onclick=async()=>{bm.disabled=true;bm.textContent='Enviando…';const com=ta.value.trim();const l=base.split('\n');
+  const listo=()=>{ta.value='';bm.disabled=false;bm.textContent='✉️ Enviar otro comentario';ok.textContent='✅ ¡Enviado a Salma! Gracias.'},fallo=()=>{bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'};let hecho=false;const espera=new Promise(res=>setTimeout(()=>res('rapido'),2500));const envio=fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{keepalive:true,method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+   body:JSON.stringify({_subject:'Juegos en casa · '+l[0].replace('📊 ',''),_template:'box',_captcha:'false','Juego':l[0].replace('📊 ',''),'Resultado':(l[1]||'').replace('✅ ',''),'Fecha':(l[2]||'').replace('📅 ',''),'Comentario de la familia':com||'(sin comentario)'})}).then(r=>{if(!r.ok)throw 0;return 'ok'});
+   envio.catch(()=>{if(hecho)ok.textContent='⚠️ Parece que no ha llegado. Probad otra vez o por WhatsApp.'});
+   try{await Promise.race([envio,espera]);hecho=true;listo()}catch(e){fallo()}};
+ d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
+{const _f2=final;final=function(){const r=_f2.apply(this,arguments);try{const j=JUEGOS.find(x=>x.id===J.id);const p=J.primera||0;
+  const txt='📊 '+NINO+' · '+(j?j.nombre:J.id)+'\n✅ '+p+' de '+RONDAS+' a la primera · nivel '+(J.nivel||1)+'\n📅 '+fechaHoy()+(window.ROT?' · vuelta '+ROT.vuelta(NINO):'')+'\n💬 Comentario: ';
+  const fin=document.querySelector('.final')||document.getElementById('app');fin.appendChild(botonWA(txt));const ot=document.getElementById('otra');if(ot&&window.ROT&&!ROT.abierto(NINO,J.id))ot.remove()}catch(e){}return r}}
+ final=(function(g){return function(){if(window.ROT&&J)ROT.completar(NINO,J.id);return g.apply(this,arguments)}})(final);/*if(window.ROT&&J)ROT.completar(NINO,J.id);*/}
+
+const h=location.hash.slice(1);
+if(JUEGOS.some(j=>j.id===h))empezar(h);else menu();
+addEventListener('hashchange',()=>{const k=location.hash.slice(1);if(JUEGOS.some(j=>j.id===k)&&(!J||J.id!==k||J.ronda>=RONDAS))empezar(k)});
+</script>
+</body></html>
