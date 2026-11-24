@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>El castillo de las palabras</title>
+<title>La pandilla de Chispa</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
 <style>
-/* Un castillo de cuento al atardecer: cielo lila con estrellas, torres y hadas; cada acierto es una estrella mágica. Un único aspecto, elegido a propósito. */
+/* La pandilla de Chispa: amarillo eléctrico con huellas de perro y rayos; cada acierto es un rayo. */
 :root{
-  --cesped:#B9A2F5; --cesped2:#F7B8D6; --linea:#FFFFFF; --cielo:#BFE6FF;
+  --cesped:#FFD43B; --cesped2:#FFE98A; --linea:#FFFFFF; --cielo:#BFE6FF;
   --tinta:#23313B; --suave:#5B6B76; --papel:#FFFFFF; --oro:#FFC93C; --rojo:#E5484D; --azul:#2F7DD3; --ok:#1F9D55;
   --display:'Fredoka','Trebuchet MS',system-ui,sans-serif; --letra:'Andika','Trebuchet MS',system-ui,sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{background:#F2A9CC}html,body{margin:0;min-height:100vh;background:var(--cesped);color:var(--tinta);font-family:var(--display)}
-body{background:radial-gradient(circle at 15% 12%,#fff 0 2px,transparent 3px) 0 0/90px 90px,radial-gradient(circle at 70% 60%,#fff8 0 1.5px,transparent 2.5px) 0 0/70px 70px,linear-gradient(180deg,#9F86E8,#F2A9CC);background-attachment:fixed}
+html{background:#FFC93C}html,body{margin:0;min-height:100vh;background:var(--cesped);color:var(--tinta);font-family:var(--display)}
+body{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%23E0A800' opacity='.35'%3E%3Cellipse cx='30' cy='38' rx='9' ry='8'/%3E%3Ccircle cx='19' cy='26' r='4'/%3E%3Ccircle cx='27' cy='21' r='4'/%3E%3Ccircle cx='35' cy='21' r='4'/%3E%3Ccircle cx='42' cy='26' r='4'/%3E%3Cpath d='M88 70 l-10 18 h8 l-6 16 16 -22 h-8 l6 -12z'/%3E%3C/g%3E%3C/svg%3E") 0 0/120px 120px,linear-gradient(180deg,#FFE066,#FFC93C);background-attachment:fixed}
 button{font:inherit;cursor:pointer;border:none;color:inherit;touch-action:manipulation}
 button:focus-visible{outline:4px solid var(--oro);outline-offset:3px}
 .wrap{max-width:820px;margin:0 auto;padding-block:14px 30px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
@@ -21,8 +21,8 @@ button:focus-visible{outline:4px solid var(--oro);outline-offset:3px}
 .chip{background:var(--papel);border:3px solid var(--tinta);border-radius:999px;padding:8px 16px;font-weight:600;font-size:16px;text-decoration:none;color:var(--tinta);display:inline-flex;gap:6px;align-items:center}
 .marcador{background:var(--tinta);color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
 .marcador b{color:var(--oro);font-size:24px}
-h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.25);text-align:center;line-height:1.05}
-.sub{color:#fff;text-align:center;font-size:18px;margin:0;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+h1{margin:0;font-size:clamp(30px,7vw,46px);color:#23313B;text-shadow:0 3px 0 rgba(255,255,255,.6);text-align:center;line-height:1.05}
+.sub{color:#23313B;text-align:center;font-size:18px;margin:0}
 /* menú */
 .menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .juego{background:var(--papel);border:4px solid var(--tinta);border-radius:24px;padding:16px;display:flex;align-items:center;gap:14px;text-align:left;box-shadow:0 6px 0 var(--tinta);transition:transform .1s}
@@ -54,7 +54,7 @@ h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0
 .palmas{display:flex;gap:8px;min-height:44px;font-size:34px;font-family:"Noto Color Emoji","Apple Color Emoji",sans-serif}
 .palmar{background:var(--oro);border:4px solid var(--tinta);border-radius:999px;padding:10px 22px;font-size:20px;font-weight:700;box-shadow:0 5px 0 var(--tinta)}
 .porterias{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
-.porteria{border:5px solid var(--tinta);border-radius:6px 6px 0 0;min-height:140px;background:linear-gradient(#EDE3FF,#D9C8FF);-webkit-mask:linear-gradient(#000 0 0) 0 22px/100% 100% no-repeat,repeating-linear-gradient(90deg,#000 0 22%,transparent 22% 33%) 0 0/100% 24px no-repeat;mask:linear-gradient(#000 0 0) 0 22px/100% 100% no-repeat,repeating-linear-gradient(90deg,#000 0 22%,transparent 22% 33%) 0 0/100% 24px no-repeat;padding-top:22px;display:grid;place-items:center;font-family:var(--letra);font-weight:700;font-size:64px;position:relative}
+.porteria{border:5px solid var(--tinta);border-radius:6px 6px 0 0;min-height:140px;background:linear-gradient(#FFE7B0,#E9B872);-webkit-mask:linear-gradient(#000 0 0) 0 22px/100% 100% no-repeat,repeating-linear-gradient(90deg,#000 0 22%,transparent 22% 33%) 0 0/100% 24px no-repeat;mask:linear-gradient(#000 0 0) 0 22px/100% 100% no-repeat,repeating-linear-gradient(90deg,#000 0 22%,transparent 22% 33%) 0 0/100% 24px no-repeat;padding-top:22px;display:grid;place-items:center;font-family:var(--letra);font-weight:700;font-size:64px;position:relative}
 .porteria.ok{background:#D9F7E5}.porteria.mal{animation:sacude .4s}
 .adulto{border:2px dashed #C9B6F2;cursor:pointer;font-family:var(--letra);font-weight:700;font-size:16px;color:var(--suave);background:#F3EEF9;border-radius:10px;padding:4px 12px;margin-top:-6px}
 .personajes{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
@@ -84,10 +84,11 @@ h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0
 .juego.hoy{box-shadow:0 0 0 4px #F2C94C,0 8px 20px rgba(0,0,0,.12)}.hoy-b{background:#FFF3C4!important;color:#8A6A00!important}.dia-msg{background:rgba(255,255,255,.92);color:#4A3326;border-radius:16px;padding:10px 14px;font-weight:700;margin:4px 0 10px;text-align:center}
 .juego.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.juego.cerrado:hover{transform:none}.candado{display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#8A6E5C;background:#F1E8DC;border-radius:999px;padding:2px 10px}.modal-cod{position:fixed;inset:0;background:rgba(40,25,15,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.caja-cod{background:#fff;border-radius:22px;padding:22px;max-width:360px;width:100%;text-align:center;color:#4A3326;font-family:Nunito,Verdana,sans-serif}.caja-cod b{font-size:20px}.caja-cod p{margin:6px 0 12px;color:#7A6252}.caja-cod input{width:100%;font:inherit;font-size:24px;font-weight:800;text-align:center;letter-spacing:.12em;padding:10px;border:2px solid #E8D9C5;border-radius:14px;text-transform:uppercase}.err-cod{color:#A2403B;font-weight:700;min-height:22px;margin-top:6px;font-size:14px}.bts-cod{display:flex;gap:10px;margin-top:8px}.bts-cod button{flex:1;font:inherit;font-weight:800;border-radius:14px;padding:12px;border:2px solid #E8D9C5;background:#fff;color:#6F4A30;cursor:pointer}.bts-cod .cod-si{background:#6F4A30;color:#fff;border-color:#6F4A30}.tengo-cod{display:block;margin:14px auto 0;font:inherit;font-weight:800;background:#fff;color:#6F4A30;border:2px dashed #C9B6A0;border-radius:999px;padding:10px 18px;cursor:pointer}
 .aviso-cerrado{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4A3326;color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;z-index:99;max-width:90vw;text-align:center}
+.porteria{-webkit-mask:none!important;mask:none!important;clip-path:polygon(50% 0,100% 30%,100% 100%,0 100%,0 30%);border:none!important;background:linear-gradient(#C0392B 0 30%,#E9B872 30%)!important;padding-top:40px;min-height:170px}
 </style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head><body>
 <div class="wrap" id="app"></div>
 <script>
-const E={casa:'🏠',silla:'🪑',luna:'🌙',sapo:'🐸',pato:'🦆',gato:'🐱',foca:'🦭',vaca:'🐄',mono:'🐒',lobo:'🐺',pera:'🍐',dado:'🎲',rosa:'🌹',nube:'☁️',coche:'🚗',uvas:'🍇',oso:'🐻',moto:'🏍️',cama:'🛏️',sopa:'🍲',bota:'👢',seta:'🍄',sandía:'🍉',tambor:'🥁',limón:'🍋',
+const E={perro:'🐶',hueso:'🦴',queso:'🧀',beso:'💋',rayo:'⚡',cerdo:'🐷',casa:'🏠',silla:'🪑',luna:'🌙',sapo:'🐸',pato:'🦆',gato:'🐱',foca:'🦭',vaca:'🐄',mono:'🐒',lobo:'🐺',pera:'🍐',dado:'🎲',rosa:'🌹',nube:'☁️',coche:'🚗',uvas:'🍇',oso:'🐻',moto:'🏍️',cama:'🛏️',sopa:'🍲',bota:'👢',seta:'🍄',sandía:'🍉',tambor:'🥁',limón:'🍋',
 sol:'☀️',pez:'🐟',tren:'🚂',flor:'🌸',pan:'🍞',pie:'🦶',
 pelota:'⚽',tomate:'🍅',conejo:'🐰',patata:'🥔',zapato:'👞',gallina:'🐔',manzana:'🍎',ballena:'🐋',jirafa:'🦒',caracol:'🐌',tortuga:'🐢',
 mariposa:'🦋',elefante:'🐘',cocodrilo:'🐊',bicicleta:'🚲',calabaza:'🎃',
@@ -102,15 +103,15 @@ let est={}; try{est=JSON.parse(localStorage.getItem('clara-est')||'{}')}catch(e)
 const guardar=()=>{try{localStorage.setItem('clara-estrellas',goles);localStorage.setItem('clara-est',JSON.stringify(est))}catch(e){}};
 
 /* ---------- datos de cada juego ---------- */
-const SILABAS={1:['sol','pez','tren','flor','pan','pie'],2:['casa','luna','sapo','pato','gato','foca','vaca','mono','oso','moto','uvas','nube'],3:['pelota','tomate','conejo','patata','zapato','gallina','manzana','ballena','jirafa','caracol','tortuga'],4:['mariposa','elefante','cocodrilo','bicicleta','calabaza']};
-const BIS=[['ca','sa','casa'],['lu','na','luna'],['sa','po','sapo'],['pa','to','pato'],['ga','to','gato'],['fo','ca','foca'],['va','ca','vaca'],['mo','no','mono'],['lo','bo','lobo'],['pe','ra','pera'],['da','do','dado'],['ro','sa','rosa'],['nu','be','nube'],['mo','to','moto'],['ca','ma','cama'],['so','pa','sopa'],['bo','ta','bota']];
-const INI=[['mono','m'],['moto','m'],['mano','m'],['pato','p'],['pera','p'],['pez','p'],['seta','s'],['sol','s'],['silla','s'],['luna','l'],['lobo','l'],['tomate','t'],['tren','t'],['nube','n'],['nariz','n'],['dado','d'],['foca','f'],['flor','f'],['rosa','r'],['ratón','r'],['casa','c'],['coche','c'],['vaca','v'],['gato','g'],['oso','o'],['uvas','u'],['árbol','a'],['elefante','e']];
-const GRUPOS={m:['mono','moto','mano','manzana','mariposa'],s:['sol','silla','seta','sandía'],p:['pato','pera','pez','pelota','patata'],l:['luna','lobo','león','limón'],t:['tomate','tren','tortuga','tambor'],c:['casa','coche','conejo','cama','caracol']};
+const SILABAS={1:['sol','pez','tren','flor','pan','pie'],2:['casa','luna','sapo','pato','gato','foca','vaca','mono','oso','moto','uvas','nube','perro','hueso','rayo','cerdo'],3:['pelota','tomate','conejo','patata','zapato','gallina','manzana','ballena','jirafa','caracol','tortuga'],4:['mariposa','elefante','cocodrilo','bicicleta','calabaza']};
+const BIS=[['pe','rro','perro'],['hue','so','hueso'],['ra','yo','rayo'],['ca','sa','casa'],['lu','na','luna'],['sa','po','sapo'],['pa','to','pato'],['ga','to','gato'],['fo','ca','foca'],['va','ca','vaca'],['mo','no','mono'],['lo','bo','lobo'],['pe','ra','pera'],['da','do','dado'],['ro','sa','rosa'],['nu','be','nube'],['mo','to','moto'],['ca','ma','cama'],['so','pa','sopa'],['bo','ta','bota']];
+const INI=[['perro','p'],['rayo','r'],['mono','m'],['moto','m'],['mano','m'],['pato','p'],['pera','p'],['pez','p'],['seta','s'],['sol','s'],['silla','s'],['luna','l'],['lobo','l'],['tomate','t'],['tren','t'],['nube','n'],['nariz','n'],['dado','d'],['foca','f'],['flor','f'],['rosa','r'],['ratón','r'],['casa','c'],['coche','c'],['vaca','v'],['gato','g'],['oso','o'],['uvas','u'],['árbol','a'],['elefante','e']];
+const GRUPOS={m:['mono','moto','mano','manzana','mariposa'],s:['sol','silla','seta','sandía'],p:['perro','pato','pera','pez','pelota','patata'],l:['luna','lobo','león','limón'],t:['tomate','tren','tortuga','tambor'],c:['casa','coche','conejo','cama','caracol']};
 const PARES=[['m','s'],['p','t'],['l','m'],['c','p'],['s','t'],['c','m'],['l','s']];
-const RIMAS=[['gato','pato','zapato'],['foca','boca'],['pelota','bota'],['caracol','sol'],['manzana','ventana'],['ratón','camión','león','corazón'],['abeja','oveja'],['tortuga','lechuga'],['conejo','espejo'],['tomate','chocolate']];
+const RIMAS=[['hueso','queso','beso'],['gato','pato','zapato'],['foca','boca'],['pelota','bota'],['caracol','sol'],['manzana','ventana'],['ratón','camión','león','corazón'],['abeja','oveja'],['tortuga','lechuga'],['conejo','espejo'],['tomate','chocolate']];
 
-const DW=[['dado','🎲'],['nido','🪺'],['diente','🦷'],['delfín','🐬'],['helado','🍦'],['candado','🔒'],['espada','🗡️'],['moneda','🪙'],['ducha','🚿'],['dedal','🪡']];
-const RW=[['pera','🍐'],['loro','🦜'],['toro','🐂'],['corona','👑'],['mariposa','🦋'],['jirafa','🦒'],['cereza','🍒'],['oreja','👂'],['sirena','🧜‍♀️'],['caramelo','🍬']];
+const DW=[['dálmata','🐕'],['dragón','🐉'],['dado','🎲'],['nido','🪺'],['diente','🦷'],['delfín','🐬'],['helado','🍦'],['candado','🔒'],['espada','🗡️'],['moneda','🪙'],['ducha','🚿'],['dedal','🪡']];
+const RW=[['canario','🐤'],['pera','🍐'],['loro','🦜'],['toro','🐂'],['corona','👑'],['mariposa','🦋'],['jirafa','🦒'],['cereza','🍒'],['oreja','👂'],['sirena','🧜‍♀️'],['caramelo','🍬']];
 const DP=['dida','mada','lodu','tide','sadi','nodo','pude','fida'];
 const RP=['mara','tira','lori','sure','pira','nero','fura','bara'];
 const JUEGOS=[
@@ -120,16 +121,16 @@ const JUEGOS=[
  {id:'silabas',ico:'👏',nombre:'Palmadas de sílabas',desc:'¿Cuántas palmadas tiene?'},
  {id:'termina',ico:'🧩',nombre:'Termina la palabra',desc:'Elige la sílaba que falta.'},
  {id:'inicial',ico:'🔤',nombre:'¿Por qué letra empieza?',desc:'Busca la primera letra.'},
- {id:'porterias',ico:'🏰',nombre:'Las dos torres',desc:'Lleva cada dibujo a su torre.'},
+ {id:'porterias',ico:'🏠',nombre:'Las dos casetas',desc:'Lleva cada dibujo a su caseta.'},
  {id:'rimas',ico:'🎵',nombre:'Cazarrimas',desc:'¿Cuál suena igual al final?'},
 ];
 
 /* ---------- menú ---------- */
 function menu(){
   location.hash='';
-  app.innerHTML=`<div class="top"><a class="chip" href="j-0aa166952dce5150.html">← Mis juegos</a><div class="marcador">✨ Estrellas <b>${goles}</b></div></div>
-  <h1>El castillo de las palabras</h1><p class="sub">Elige un juego. ¡Cada acierto es una estrella mágica!</p>
-  <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'👑 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
+  app.innerHTML=`<div class="top"><a class="chip" href="j-0aa166952dce5150.html">← Mis juegos</a><div class="marcador">⚡ Rayos <b>${goles}</b></div></div>
+  <h1>🐶 La pandilla de Chispa ⚡</h1><p class="sub">Elige un juego. ¡Cada acierto es un rayo para Chispa!</p>
+  <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🦴 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
   <div class="nota"><b>Para el adulto:</b> los dibujos no llevan el nombre escrito a propósito, para que Clara los nombre en voz alta y escuche sus sonidos. Si duda con algún dibujo, decidle vosotros el nombre. Si falla dos veces, la respuesta correcta brilla para ayudarla. En <b>Dida y Mara</b>, decid vosotros la palabra que aparece en pequeño, con calma y sin exagerar el sonido; Clara elige si ha oído la d de Dida o la r de Mara.</div>`;
   app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
 }
@@ -148,7 +149,7 @@ function generar(id){
 }
 function cabecera(){
   const j=JUEGOS.find(x=>x.id===J.id);
-  return `<div class="top"><button class="chip" id="volver">← Juegos</button><div class="marcador">✨ Estrellas <b>${goles}</b></div></div>
+  return `<div class="top"><button class="chip" id="volver">← Juegos</button><div class="marcador">⚡ Rayos <b>${goles}</b></div></div>
   <div class="progreso">${Array.from({length:RONDAS},(_,i)=>`<i class="${i<J.ronda?'hecho':''}">${i<J.ronda?'⭐':''}</i>`).join('')}</div>`;
 }
 function pintar(){
@@ -173,7 +174,7 @@ function pintar(){
   }
   if(J.id==='porterias'){
     const [a,b]=J.items.par;
-    cuerpo=`<div class="titulo">Las dos torres</div><div class="consigna">¿Empieza por <b>${a}</b> o por <b>${b}</b>? ¡Llévalo a su torre!</div>
+    cuerpo=`<div class="titulo">Las dos casetas</div><div class="consigna">¿Empieza por <b>${a}</b> o por <b>${b}</b>? ¡Llévalo a su caseta!</div>
     <div class="dibujo" id="balon">${E[it.w]}</div>
     <div class="porterias">${[a,b].map(l=>`<button class="porteria" data-v="${l}">${l}</button>`).join('')}</div>`;
   }
@@ -198,7 +199,7 @@ function correcta(){
   if(J.id.startsWith('dm'))return it.k;
   return {silabas:String(it.n),termina:it[1],inicial:it[1],porterias:it.l,rimas:it[1]}[J.id];
 }
-const BIEN=['¡Magia!','✨ ¡Hechizo perfecto! ✨','¡Genial!','¡Muy bien!','¡Bravo!'];
+const BIEN=['⚡ ¡Chispazo!','🐶 ¡Guau, genial!','¡Muy bien!','⚡ ¡Rayo atrapado!','¡Bravo!'];
 function responder(btn){
   if(J.bloq)return;
   const ok=btn.dataset.v===correcta();
@@ -215,8 +216,8 @@ function responder(btn){
 }
 function final(){
   est[J.id]=(est[J.id]||0)+1;guardar();
-  app.innerHTML=cabecera()+`<div class="campo"><div class="final"><div class="trofeo">👑</div><div class="titulo" style="font-size:32px">¡Reto conseguido!</div>
-  <div class="consigna" style="margin:0">Has ganado ${RONDAS} estrellas mágicas en este juego.</div>
+  app.innerHTML=cabecera()+`<div class="campo"><div class="final"><div class="trofeo">🐶</div><div class="titulo" style="font-size:32px">¡Chispa está supercargada!</div>
+  <div class="consigna" style="margin:0">Has conseguido ${RONDAS} rayos en este juego. ⚡</div>
   <div class="btns"><button class="btn" id="otra">Jugar otra vez</button><button class="btn blanco" id="menu">Otros juegos</button></div></div></div>`;
   document.getElementById('volver').onclick=menu;document.getElementById('menu').onclick=menu;document.getElementById('otra').onclick=()=>empezar(J.id);
 }
