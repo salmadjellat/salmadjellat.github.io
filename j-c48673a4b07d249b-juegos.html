@@ -155,12 +155,12 @@ const NINO='Arturo';
 let PICK_CTX=null;
 /* ---------- bancos de palabras (animales raros y biología) ---------- */
 /* [nombre, artículo de Wikipedia en inglés para la foto real, emoji de reserva] */
-const DIB={1:[['okapi','Okapi','🦓'],['saiga','Saiga_antelope','🐐'],['fosa','Fossa_(animal)','🐈'],['tapir','Malayan_tapir','🐗'],['lémur','Ring-tailed_lemur','🐒'],['serval','Serval','🐆'],['quokka','Quokka','🐹'],['gavial','Gharial','🐊'],['fénec','Fennec_fox','🦊'],['lince','Iberian_lynx','🐈'],['quetzal','Resplendent_quetzal','🦜'],['nutria','Sea_otter','🦦'],['hoacín','Hoatzin','🐦'],['desmán','Pyrenean_desman','🐭'],['caracal','Caracal','🐈']],
- 2:[['ajolote','Axolotl','🦎'],['pangolín','Pangolin','🦔'],['capibara','Capybara','🐹'],['equidna','Short-beaked_echidna','🦔'],['casuario','Southern_cassowary','🐦'],['tarsero','Tarsier','🐒'],['camaleón','Chameleon','🦎'],['manatí','West_Indian_manatee','🦭'],['suricata','Meerkat','🐿️'],['armadillo','Nine-banded_armadillo','🦔'],['perezoso','Brown-throated_sloth','🦥'],['matamata','Mata_mata','🐢'],['narigudo','Proboscis_monkey','🐒'],['escorpión','Scorpion','🦂']],
- 3:[['ornitorrinco','Platypus','🦆'],['tardígrado','Tardigrade','🐛'],['picozapato','Shoebill','🐦'],['quebrantahuesos','Bearded_vulture','🦅'],['clamidosaurio','Frill-necked_lizard','🦎'],['oso hormiguero','Giant_anteater','🐜'],['dragón de Komodo','Komodo_dragon','🦎'],['rana de cristal','Glassfrog','🐸'],['diablo espinoso','Thorny_devil','🦎'],['panda rojo','Red_panda','🐼'],['mantis orquídea','Hymenopus_coronatus','🦗'],['pulpo mimo','Mimic_octopus','🐙']]};
-const REAL={1:['lince','okapi','tapir','saiga','nutria','gavial','alga','ostra','pulpo','tigre','cebra','fósil','plancton','ámbar','insecto','especie','órgano','hongo','garza','buitre','lagarto','cangrejo','escorpión','orca','espora','albatros'],
- 2:['ajolote','pangolín','capibara','equidna','casuario','tarsero','camaleón','armadillo','suricata','mamífero','anfibio','reptil','esqueleto','depredador','camuflaje','molusco','crustáceo','escarabajo','murciélago','branquias','vertebrado','plumaje','arácnido','lombriz'],
- 3:['ornitorrinco','tardígrado','picozapato','quebrantahuesos','clamidosaurio','metamorfosis','ecosistema','invertebrado','microorganismo','fotosíntesis','paleontólogo','entomólogo','biodiversidad','cromosoma','hibernación','ecolocalización','cefalópodo','herbívoro','carnívoro','omnívoro','exoesqueleto','bioluminiscencia']};
+const DIB={1:[['koala','Koala','🐨'],['panda','Giant_panda','🐼'],['lince','Iberian_lynx','🐈'],['nutria','Eurasian_otter','🦦'],['foca','Harbor_seal','🦭'],['morsa','Walrus','🦭'],['búho','Eurasian_eagle-owl','🦉'],['puma','Cougar','🐆'],['cebra','Plains_zebra','🦓'],['tigre','Tiger','🐯'],['hiena','Spotted_hyena','🐕'],['alce','Moose','🦌'],['bisonte','American_bison','🦬'],['castor','North_American_beaver','🦫'],['gorila','Western_gorilla','🦍'],['orca','Orca','🐋'],['buitre','Griffon_vulture','🦅'],['tucán','Toco_toucan','🐦'],['iguana','Green_iguana','🦎'],['mapache','Raccoon','🦝']],
+ 2:[['suricata','Meerkat','🐿️'],['camaleón','Veiled_chameleon','🦎'],['perezoso','Brown-throated_sloth','🦥'],['armadillo','Nine-banded_armadillo','🦔'],['flamenco','American_flamingo','🦩'],['pingüino','Emperor_penguin','🐧'],['canguro','Red_kangaroo','🦘'],['avestruz','Common_ostrich','🐦'],['jaguar','Jaguar','🐆'],['leopardo','Leopard','🐆'],['guepardo','Cheetah','🐆'],['rinoceronte','White_rhinoceros','🦏'],['hipopótamo','Hippopotamus','🦛'],['ajolote','Axolotl','🦎'],['capibara','Capybara','🐹'],['chimpancé','Chimpanzee','🐒'],['cocodrilo','Nile_crocodile','🐊'],['escorpión','Scorpion','🦂'],['tiburón','Great_white_shark','🦈'],['delfín','Common_bottlenose_dolphin','🐬']],
+ 3:[['oso polar','Polar_bear','🐻‍❄️'],['panda rojo','Red_panda','🐼'],['ornitorrinco','Platypus','🦆'],['oso hormiguero','Giant_anteater','🐜'],['dragón de Komodo','Komodo_dragon','🦎'],['caballito de mar','Seahorse','🐠'],['tortuga marina','Green_sea_turtle','🐢'],['pez payaso','Ocellaris_clownfish','🐠'],['mantis religiosa','Mantis_religiosa','🦗'],['estrella de mar','Starfish','⭐'],['águila real','Golden_eagle','🦅'],['ballena jorobada','Humpback_whale','🐋']]};
+const REAL={1:['lince','koala','panda','nutria','morsa','alce','orca','tigre','cebra','puma','alga','ostra','pulpo','fósil','insecto','especie','hongo','garza','buitre','lagarto','cangrejo','castor','iguana','bisonte','tucán','gusano'],
+ 2:['suricata','camaleón','armadillo','flamenco','pingüino','canguro','avestruz','leopardo','guepardo','ajolote','capibara','mamífero','anfibio','reptil','esqueleto','depredador','camuflaje','molusco','escarabajo','murciélago','branquias','plumaje','lombriz','salamandra'],
+ 3:['ornitorrinco','rinoceronte','hipopótamo','cocodrilo','chimpancé','dromedario','saltamontes','metamorfosis','ecosistema','invertebrado','fotosíntesis','biodiversidad','hibernación','herbívoro','carnívoro','omnívoro','exoesqueleto','mariquita','tiburón blanco','oso hormiguero']};
 const PSEU={1:['ospe','ulmo','irta','elpo','asni','orfe','alpi','ensu','isda','orbi','olfi','esdu','irpo','ulsa','pralo','glime','trafu','blesi','drapi','fleto','ampi','ombe','tolsa','merpi'],
  2:['taspilo','morgalo','emplita','olbrasu','pirsela','ansoplu','istrela','garnupo','ulmabre','bostiral','ernofla','pliscona','fanspelo','tolcrami','esbalgo','umpertia','glosmira','trinsalo','colperdi','alfrumo','presmona','buldorta'],
  3:['transpolimeca','ornesfladito','pulmastrogena','esclabortino','glintrasopeca','flastemporido','ambrisculeta','tornaspelida','crestolbanudo','implastoreta','perlistranco','olgatrasmide','brundelospira','escrontalima','faldespronilo','sorplantudo']};
@@ -217,7 +217,7 @@ function menu(){
   <h1>Expedición biólogo</h1><p class="sub">Elige una misión. ¡Cada acierto es un descubrimiento!</p>
   <div class="nivel-chip">🧭 ${NOMBRES_NIVEL[NIVEL()]}</div>
   <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🏆 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
-  <div class="nota"><b>Para el adulto:</b> cada día se abre un juego. Cuando Arturo termina todos, vuelven a empezar con palabras nuevas y un nivel más difícil (hasta el nivel 3). Cada juego tiene 10-12 rondas. Dentro de cada juego, el botón «👀 Para el adulto» explica qué hacer. Si falla dos veces, la respuesta correcta brilla para ayudarle.</div>`;
+  <div class="nota"><b>Para el adulto:</b> cada día se abre un juego. Cuando Arturo termina todos, vuelven a empezar con palabras nuevas y un nivel más difícil (hasta el nivel 3). Cada juego tiene 10-12 rondas. Dentro de cada juego, el botón «👀 Para el adulto» explica qué hacer.</div>`;
   app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
   try{precargarFotos()}catch(e){}
 }
@@ -295,16 +295,15 @@ function responder(btn){
   if(J.bloq)return;
   if(J.id==='lectura'||J.id==='magicas'){clearInterval(J.tick);if(btn.dataset.v==='bien'){J.primera++;celebrar()}else{document.getElementById('msg').textContent='¡Leedla juntos una vez y seguimos!'}btn.classList.add('ok');return siguiente(btn.dataset.v==='bien'?1100:2200)}
   const ok=btn.dataset.v===correcta();
+  if(!ok&&J.id==='existe'){btn.classList.add('mal');document.getElementById('msg').textContent=correcta()==='si'?'¡Uy! Esa palabra sí existe.':'¡Uy! Esa palabra es inventada.';return siguiente(1800)}
   if(ok){btn.classList.add('ok');if(J.fallos===0)J.primera++;celebrar();siguiente()}
   else{J.fallos++;btn.classList.add('mal');btn.disabled=true;
-    document.getElementById('msg').textContent=J.fallos>=2?'¡Mira la que brilla!':'¡Casi! Compara letra a letra.';
-    if(J.fallos>=2)app.querySelectorAll('[data-v]').forEach(b=>{if(b.dataset.v===correcta())b.classList.add('pista')})}
+    document.getElementById('msg').textContent='¡Casi! Compara letra a letra.'}
 }
 function montarIguales(it){let hall=0;
   app.querySelectorAll('.carta').forEach(b=>b.onclick=()=>{if(J.bloq||b.classList.contains('ok'))return;
     if(b.textContent===it.w){b.classList.add('ok');hall++;if(hall===3){if(J.fallos===0)J.primera++;celebrar();siguiente()}}
-    else{J.fallos++;b.classList.add('mal');b.disabled=true;document.getElementById('msg').textContent='Esa no es igual. ¡Compara letra a letra!';
-      if(J.fallos>=2)app.querySelectorAll('.carta').forEach(c=>{if(c.textContent===it.w&&!c.classList.contains('ok'))c.classList.add('pista')})}})}
+    else{J.fallos++;b.classList.add('mal');b.disabled=true;document.getElementById('msg').textContent='Esa no es igual. ¡Compara letra a letra!'}})}
 function montarSopa(){const B=J.items[Math.floor(J.ronda/5)];let ini=null;
   const L=(x,y)=>app.querySelector(`.le[data-x="${x}"][data-y="${y}"]`);
   B.pos.filter(p=>p.hallada).forEach(p=>{for(let i=0;i<p.w.length;i++)L(p.r+p.dx*i,p.c+p.dy*i).classList.add('hallada')});
@@ -314,8 +313,7 @@ function montarSopa(){const B=J.items[Math.floor(J.ronda/5)];let ini=null;
     const fin=p=>[p.r+p.dx*(p.w.length-1),p.c+p.dy*(p.w.length-1)];
     const p=B.pos.find(p=>{if(p.hallada)return false;const [xf,yf]=fin(p);return (p.r===x0&&p.c===y0&&xf===x&&yf===y)||(p.r===x&&p.c===y&&xf===x0&&yf===y0)});
     if(p){p.hallada=true;if(J.fallos===0)J.primera++;J.fallos=0;for(let i=0;i<p.w.length;i++)L(p.r+p.dx*i,p.c+p.dy*i).classList.add('hallada');celebrar();siguiente(900)}
-    else{J.fallos++;document.getElementById('msg').textContent='Ahí no está. Busca la primera letra de una palabra de la lista.';
-      if(J.fallos>=3){const q=B.pos.find(p=>!p.hallada);L(q.r,q.c).classList.add('pista')}}})}
+    else{J.fallos++;document.getElementById('msg').textContent='Ahí no está. Busca la primera letra de una palabra de la lista.'}})}
 /* ---------- fotos reales (Wikipedia) ---------- */
 const FOTO={};
 async function urlFoto(t){if(FOTO[t]!==undefined)return FOTO[t];try{const c=localStorage.getItem('foto-'+t);if(c!==null&&c!==''){FOTO[t]=c;return c}}catch(e){}
