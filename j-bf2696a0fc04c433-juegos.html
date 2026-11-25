@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>El reino arcoíris</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* El reino arcoíris: lila y pastel, slime que reacciona, arcoíris que se va pintando con cada acierto. */
+:root{--tinta:#3B2A5A;--suave:#6E5F86;--papel:#FFFFFF;--rosa:#FF8FC7;--lila:#B79CFF;--menta:#7FE3C4;--oro:#FFC94D;--ok:#22A06B;
+ --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;--letra:'Andika','Trebuchet MS',system-ui,sans-serif;--emo:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html{background:#EBDDFF}
+html,body{margin:0;min-height:100vh;color:var(--tinta);font-family:var(--display)}
+body{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg opacity='.5'%3E%3Cpath d='M20 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z' fill='%23fff'/%3E%3Ccircle cx='100' cy='40' r='5' fill='%23FFB3DA'/%3E%3Cpath d='M70 110 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z' fill='%23FFE08A'/%3E%3Ccircle cx='30' cy='105' r='4' fill='%23A8F0DA'/%3E%3C/g%3E%3C/svg%3E") 0 0/140px 140px,linear-gradient(160deg,#FFE3F3 0%,#EBDDFF 45%,#D8F3FF 100%);background-attachment:fixed}
+button{font:inherit;cursor:pointer;border:none;color:inherit;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--oro);outline-offset:3px}
+.wrap{max-width:820px;margin:0 auto;padding-block:14px 30px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.chip{background:var(--papel);border:3px solid var(--tinta);border-radius:999px;padding:8px 16px;font-weight:600;font-size:16px;text-decoration:none;color:var(--tinta);display:inline-flex;gap:6px;align-items:center}
+.marcador{background:var(--tinta);color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;font-size:18px;display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.marcador b{color:#FFD6F0;font-size:24px}
+h1{margin:0;font-size:clamp(30px,7vw,46px);text-align:center;line-height:1.05;background:linear-gradient(90deg,#FF5FA2,#FF9F43,#F7C600,#2BCB7A,#3BA7FF,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #fff)}
+.sub{text-align:center;font-size:18px;margin:0;color:var(--suave)}
+/* slime */
+.slime-zona{display:flex;justify-content:center;align-items:flex-end;gap:10px;min-height:70px}
+.slime{width:78px;height:62px;position:relative;border-radius:50% 50% 42% 42%/62% 62% 38% 38%;background:radial-gradient(circle at 30% 30%,#fff9 0 12%,transparent 13%),var(--sc,#8CF0C8);border:3px solid var(--tinta);animation:respira 2.4s ease-in-out infinite;transform-origin:50% 100%}
+.slime::before,.slime::after{content:'';position:absolute;top:22px;width:10px;height:13px;border-radius:50%;background:var(--tinta)}
+.slime::before{left:22px}.slime::after{right:22px}
+.slime i{position:absolute;left:50%;top:38px;width:16px;height:8px;border-radius:0 0 12px 12px;border:3px solid var(--tinta);border-top:none;transform:translateX(-50%)}
+.slime.feliz{animation:bote .7s}.slime.triste{animation:chof .6s}
+.slime.triste i{border-radius:12px 12px 0 0;border-top:3px solid var(--tinta);border-bottom:none;top:42px}
+.bocadillo{background:#fff;border:3px solid var(--tinta);border-radius:18px 18px 18px 4px;padding:6px 12px;font-family:var(--letra);font-weight:700;font-size:16px;max-width:280px}
+@keyframes respira{50%{transform:scale(1.05,.95)}}
+@keyframes bote{30%{transform:translateY(-26px) scale(.9,1.1)}60%{transform:translateY(0) scale(1.2,.8)}100%{transform:none}}
+@keyframes chof{40%{transform:scale(1.25,.7)}100%{transform:none}}
+/* menú */
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.juego{background:var(--papel);border:4px solid var(--tinta);border-radius:24px;padding:16px;display:flex;align-items:center;gap:14px;text-align:left;box-shadow:0 6px 0 var(--tinta);transition:transform .1s;position:relative;overflow:hidden}
+.juego::after{content:'';position:absolute;left:0;right:0;bottom:0;height:7px;background:linear-gradient(90deg,#FF5FA2,#FF9F43,#F7C600,#2BCB7A,#3BA7FF,#8B5CF6)}
+.juego:active{transform:translateY(4px);box-shadow:0 2px 0 var(--tinta)}
+.juego .ico{font-size:44px;line-height:1;font-family:var(--emo)}
+.juego .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.juego b{font-size:21px}
+.juego span{font-size:15px;color:var(--suave);font-family:var(--letra)}
+.juego .estrellas{font-size:16px}
+.album{background:rgba(255,255,255,.9);border:3px dashed var(--lila);border-radius:20px;padding:12px 14px;text-align:center}
+.album b{font-size:18px}
+.pegs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.peg{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:30px;font-family:var(--emo);background:#F4EEFF;border:2px solid #E2D6FF}
+.peg.vacia{filter:grayscale(1) opacity(.25)}
+/* juego */
+.arcoiris{display:flex;gap:4px;justify-content:center}
+.arcoiris i{width:34px;height:16px;border-radius:999px;background:#fff;border:2px solid var(--tinta);display:block;transition:background .4s}
+.campo{background:var(--papel);border:4px solid var(--tinta);border-radius:28px;padding:18px clamp(12px,3vw,26px) 22px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 7px 0 var(--tinta);position:relative;overflow:hidden}
+.titulo{font-size:22px;font-weight:700;text-align:center}
+.consigna{font-family:var(--letra);font-size:18px;color:var(--suave);text-align:center;margin-top:-8px}
+.dibujo{font-size:clamp(90px,22vw,140px);line-height:1;font-family:var(--emo);user-select:none;animation:entra .5s}
+@keyframes entra{0%{transform:scale(.3) rotate(-15deg);opacity:0}70%{transform:scale(1.1)}100%{transform:none;opacity:1}}
+.opciones{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
+.op{min-width:84px;min-height:80px;padding:10px 18px;background:#F6F1FF;border:4px solid var(--tinta);border-radius:22px;font-family:var(--letra);font-weight:700;font-size:clamp(30px,7.5vw,44px);box-shadow:0 5px 0 var(--tinta);transition:transform .1s,background .2s,opacity .3s}
+.op:active{transform:translateY(4px);box-shadow:0 1px 0 var(--tinta)}
+.op.emo{font-family:var(--emo);font-size:clamp(46px,11vw,62px)}
+.op.txt{font-size:clamp(26px,6.5vw,38px)}
+.op.ok{background:#D6F8E8;border-color:var(--ok)}
+.op.mal{background:#FFE1EC;animation:sacude .4s;opacity:.45}
+.op.fuera{opacity:.18;pointer-events:none;filter:grayscale(1)}
+.op.gota{border-radius:50% 50% 46% 46%/58% 58% 42% 42%;background:var(--gc,#C7F5E6)}
+@keyframes sacude{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.palabra{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;font-family:var(--letra);font-weight:700;font-size:clamp(34px,9vw,58px)}
+.sil{min-width:78px;text-align:center;padding:4px 12px;border-radius:18px;background:#FFF0F8;border:4px solid var(--tinta)}
+.sil.hueco{background:#fff;border-style:dashed;color:#C7B8E6}
+.sil.marca{animation:latido 1s infinite}
+@keyframes latido{50%{box-shadow:0 0 0 7px #FFD6F0}}
+.pista{width:100%;background:linear-gradient(90deg,#FFF6D6,#FFE9F5);border:3px solid var(--oro);border-radius:18px;padding:10px 14px;font-family:var(--letra);font-size:18px;font-weight:700;display:none;gap:8px;align-items:flex-start;animation:entra .4s}
+.pista.si{display:flex}
+.pista .ico{font-family:var(--emo);font-size:26px;line-height:1}
+.oir{background:var(--lila);color:#fff;border:3px solid var(--tinta);border-radius:999px;padding:8px 18px;font-weight:700;font-size:18px;box-shadow:0 4px 0 var(--tinta)}
+.adiv{font-family:var(--letra);font-size:clamp(20px,5vw,26px);font-weight:700;text-align:center;line-height:1.35;display:flex;flex-direction:column;gap:6px}
+.adiv span{display:block;animation:entra .4s}
+.adulto{border:2px dashed #C9B6F2;cursor:pointer;font-family:var(--letra);font-weight:700;font-size:16px;color:var(--suave);background:#F3EEF9;border-radius:10px;padding:4px 12px}
+.msg{font-size:22px;font-weight:700;min-height:1.3em;text-align:center}
+.fiesta{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.fiesta span{position:absolute;top:-40px;font-size:30px;font-family:var(--emo);animation:cae 1.3s ease-in forwards}
+@keyframes cae{to{transform:translateY(520px) rotate(360deg);opacity:0}}
+.bien{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.8);font-size:clamp(40px,11vw,72px);font-weight:700;color:#E0489A;pointer-events:none;animation:bienA 1.2s forwards;text-align:center}
+@keyframes bienA{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.1)}80%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.final{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.premio{font-size:110px;font-family:var(--emo);animation:salto 1s infinite}
+@keyframes salto{50%{transform:translateY(-12px) rotate(6deg)}}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{background:#E0489A;color:#fff;border:4px solid var(--tinta);border-radius:999px;padding:12px 24px;font-size:20px;font-weight:700;box-shadow:0 5px 0 var(--tinta)}
+.btn.blanco{background:#fff;color:var(--tinta)}
+.nota{background:rgba(255,255,255,.92);border-radius:16px;padding:12px 16px;font-family:var(--letra);font-size:15px;line-height:1.5;color:var(--suave)}
+.nota b{color:var(--tinta)}
+.huecos{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.hueco2{min-width:78px;min-height:66px;border:4px dashed #C7B8E6;border-radius:18px;display:grid;place-items:center;font-family:var(--letra);font-weight:700;font-size:clamp(30px,7.5vw,44px);background:#fff}
+.hueco2.lleno{border-style:solid;border-color:var(--ok);background:#D6F8E8;animation:entra .3s}
+.hueco2.ahora{border-color:#E0489A;animation:latido 1s infinite}
+@media (max-width:560px){.menu{grid-template-columns:1fr}.sil{min-width:62px}.arcoiris i{width:26px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* comunes (correo, WhatsApp, juego del día) */
+.com-l{font-weight:800;color:#4A3326;background:rgba(255,255,255,.9);border-radius:10px;padding:4px 10px}.com-l span{font-weight:600;color:#7A6252;font-size:13px}.com-t{width:100%;font:inherit;font-size:16px;border:2px solid #E8D9C5;border-radius:14px;padding:10px;resize:vertical;background:#fff;color:#4A3326}.wa-btn.mail{background:#6F4A30}.wa-otro{font:inherit;font-weight:800;background:rgba(255,255,255,.9);border:2px solid #25D366;color:#1E8E4C;border-radius:999px;padding:8px 16px;cursor:pointer}.env-ok{font-weight:800;color:#2E6B47;background:rgba(255,255,255,.9);border-radius:10px;padding:2px 10px;min-height:0}.env-ok:empty{display:none}
+.wa-caja{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px auto 0;max-width:420px;width:100%;text-align:center}.wa-btn{font:inherit;font-weight:800;font-size:17px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}.wa-caja small{color:#7A6252;background:rgba(255,255,255,.85);border-radius:10px;padding:4px 10px;font-size:13px}
+.juego.hoy{box-shadow:0 0 0 4px #FFC94D,0 8px 20px rgba(0,0,0,.12)}.hoy-b{background:#FFF3C4!important;color:#8A6A00!important}.dia-msg{background:rgba(255,255,255,.92);color:var(--tinta);border-radius:16px;padding:10px 14px;font-weight:700;margin:4px 0 10px;text-align:center}
+.juego.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.juego.cerrado:hover{transform:none}.candado{display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#6E5F86;background:#EFE8FB;border-radius:999px;padding:2px 10px}
+.aviso-cerrado{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--tinta);color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;z-index:99;max-width:90vw;text-align:center}
+</style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head><body>
+<div class="wrap" id="app"></div>
+<script>
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>pickNuevo(a,n);
+const una=a=>a[Math.floor(Math.random()*a.length)];
+const RONDAS=8;
+const app=document.getElementById('app');
+let gemas=0;try{gemas=+localStorage.getItem('ariana-gemas')||0}catch(e){}
+let est={};try{est=JSON.parse(localStorage.getItem('ariana-est')||'{}')}catch(e){}
+let pegs=[];try{pegs=JSON.parse(localStorage.getItem('ariana-pegs')||'[]')}catch(e){}
+const guardar=()=>{try{localStorage.setItem('ariana-gemas',gemas);localStorage.setItem('ariana-est',JSON.stringify(est));localStorage.setItem('ariana-pegs',JSON.stringify(pegs))}catch(e){}};
+const PEGATINAS=['🦄','🧜‍♀️','👑','🌈','🐚','💎','🧚','🫧','🌟','🎀','🍭','🦋','🌸','🪄','🍓','🐬','🏰','🧁','💖','🌙'];
+const RAINBOW=['#FF5FA2','#FF9F43','#F7C600','#2BCB7A','#3BA7FF','#5B6CFF','#8B5CF6','#E0489A'];
+const SLIMEC=['#8CF0C8','#FFB3DA','#C9B3FF','#9FDcff','#FFE08A'];
+
+/* ---------- voz (lee las consignas en voz alta) ---------- */
+function decir(t){try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=.88;u.pitch=1.15;
+ const v=s.getVoices().find(v=>/^es(-ES)?/i.test(v.lang));if(v)u.voice=v;s.speak(u)}catch(e){}}
+/* ---------- sonidos ---------- */
+let AC=null;function tono(fs,d=.12,tipo='sine',vol=.18){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();let t=AC.currentTime;fs.forEach(f=>{const o=AC.createOscillator(),g=AC.createGain();o.type=tipo;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d*1.8);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d*2);t+=d})}catch(e){}}
+const sBien=()=>tono([660,880,1175,1568],.09,'triangle');
+const sMal=()=>tono([330,262],.14,'sine',.12);
+const sPista=()=>tono([988,1319],.1,'sine',.12);
+const sFin=()=>tono([523,659,784,1047,784,1047,1319],.11,'triangle');
+
+/* ================= DATOS ================= */
+/* Palabras solo con sílabas directas que Ariana ya domina (sin g, j, z, ce/ci, qu, inversas ni trabadas) */
+const PAL=[
+ ['luna','🌙',['lu','na']],['rosa','🌹',['ro','sa']],['nube','☁️',['nu','be']],['pera','🍐',['pe','ra']],['sapo','🐸',['sa','po']],['mono','🐒',['mo','no']],['casa','🏠',['ca','sa']],['pato','🦆',['pa','to']],['sofá','🛋️',['so','fá']],['piña','🍍',['pi','ña']],['hada','🧚',['ha','da']],['sopa','🍲',['so','pa']],['silla','🪑',['si','lla']],['foca','🦭',['fo','ca']],['vaca','🐄',['va','ca']],['moto','🏍️',['mo','to']],['dado','🎲',['da','do']],['nido','🪺',['ni','do']],['cama','🛏️',['ca','ma']],['coche','🚗',['co','che']],['bota','👢',['bo','ta']],['llave','🔑',['lla','ve']],['pino','🌲',['pi','no']],['mapa','🗺️',['ma','pa']],['perro','🐶',['pe','rro']],['ducha','🚿',['du','cha']],
+ ['sirena','🧜‍♀️',['si','re','na']],['corona','👑',['co','ro','na']],['paloma','🕊️',['pa','lo','ma']],['pelota','⚽',['pe','lo','ta']],['tomate','🍅',['to','ma','te']],['ballena','🐋',['ba','lle','na']],['patata','🥔',['pa','ta','ta']],['cohete','🚀',['co','he','te']],['muñeca','🪆',['mu','ñe','ca']],['helado','🍦',['he','la','do']],['pirata','🏴‍☠️',['pi','ra','ta']],['caballo','🐴',['ca','ba','llo']],['cometa','🪁',['co','me','ta']],['pepino','🥒',['pe','pi','no']],['moneda','🪙',['mo','ne','da']],['maleta','🧳',['ma','le','ta']],['banana','🍌',['ba','na','na']],['camello','🐫',['ca','me','llo']],['cuchara','🥄',['cu','cha','ra']],['payaso','🤡',['pa','ya','so']],['camisa','👕',['ca','mi','sa']],['tetera','🫖',['te','te','ra']],
+ ['mariposa','🦋',['ma','ri','po','sa']],['caramelo','🍬',['ca','ra','me','lo']],['chocolate','🍫',['cho','co','la','te']],['teléfono','☎️',['te','lé','fo','no']],['semáforo','🚦',['se','má','fo','ro']],['caracola','🐚',['ca','ra','co','la']],['patinete','🛴',['pa','ti','ne','te']]
+];
+const SILS=[...new Set(PAL.flatMap(p=>p[2]))];
+const P3=PAL.filter(p=>p[2].length>=3);
+
+/* ga go gu gue gui: palabra, dibujo, sílabas, posición de la sílaba con g */
+const GW=[
+ ['gato','🐱',['ga','to'],0],['gafas','👓',['ga','fas'],0],['gallina','🐔',['ga','lli','na'],0],['galleta','🍪',['ga','lle','ta'],0],
+ ['gota','💧',['go','ta'],0],['gorila','🦍',['go','ri','la'],0],['gorra','🧢',['go','rra'],0],['mago','🧙',['ma','go'],1],['bigote','🥸',['bi','go','te'],1],
+ ['gusano','🐛',['gu','sa','no'],0],['lechuga','🥬',['le','chu','ga'],2],['tortuga','🐢',['tor','tu','ga'],2],
+ ['hoguera','🔥',['ho','gue','ra'],1],['espagueti','🍝',['es','pa','gue','ti'],2],['guepardo','🐆',['gue','par','do'],0],['juguete','🧸',['ju','gue','te'],1],
+ ['guitarra','🎸',['gui','ta','rra'],0],['águila','🦅',['á','gui','la'],1],['guiño','😉',['gui','ño'],0]
+];
+const GOPS=['ga','go','gu','gue','gui'];
+const GTRAMPA={gue:'ge',gui:'gi',ga:'gua',go:'guo',gu:'gue'};
+/* espejo: correcta y dos falsas */
+const ESP=[
+ ['guitarra','🎸',['gitarra','jitarra']],['águila','🦅',['ágila','ájila']],['guiño','😉',['giño','jiño']],['hoguera','🔥',['hogera','hojera']],['espagueti','🍝',['espageti','espajeti']],['guepardo','🐆',['gepardo','jepardo']],['juguete','🧸',['jugete','jujete']],
+ ['gato','🐱',['guato','jato']],['gafas','👓',['guafas','jafas']],['gorila','🦍',['guorila','jorila']],['gusano','🐛',['guusano','jusano']],['galleta','🍪',['gualleta','jalleta']],['lechuga','🥬',['lechugua','lechuja']],['mago','🧙',['maguo','maggo']]
+];
+/* adivinanzas: respuesta, nombre, pistas, otros dibujos */
+const ADV=[
+ ['🧜‍♀️','la sirena',['Vive en el mar.','Tiene cola de pez.','Es mitad chica y mitad pez.'],['🧚','👸','🐬']],
+ ['🦄','el unicornio',['Es un animal mágico.','Se parece a un caballo.','Tiene un cuerno en la frente.'],['🐴','🦓','🐑']],
+ ['🌈','el arcoíris',['Sale en el cielo.','Aparece cuando llueve y sale el sol.','Tiene muchos colores.'],['☁️','☀️','⭐']],
+ ['👸','la reina',['Vive en un castillo.','Manda en su reino.','Lleva una corona.'],['🧚','🧜‍♀️','👩‍🍳']],
+ ['🌙','la luna',['Está en el cielo.','La vemos de noche.','A veces es redonda y a veces parece un plátano.'],['☀️','⭐','☁️']],
+ ['🐙','el pulpo',['Vive en el mar.','Tiene ocho brazos.','Suelta tinta para esconderse.'],['🐠','🐟','🦀']],
+ ['🦒','la jirafa',['Es un animal muy alto.','Tiene manchas.','Tiene el cuello muy largo.'],['🐘','🦓','🐪']],
+ ['🐝','la abeja',['Es un bicho pequeño que vuela.','Hace «bzzzz».','Hace miel.'],['🦋','🐞','🐜']],
+ ['🦘','el canguro',['Es un animal que salta mucho.','Tiene la cola muy fuerte.','Lleva a su bebé en una bolsa.'],['🐰','🐒','🦒']],
+ ['🍦','el helado',['Se come.','Es frío y dulce.','Si hace calor, se derrite.'],['🍰','🍭','🧃']],
+ ['☂️','el paraguas',['Lo usamos cuando llueve.','Se abre y se cierra.','Sirve para no mojarnos.'],['🧥','👢','🧢']],
+ ['👓','las gafas',['Se ponen en la cara.','Tienen dos cristales.','Sirven para ver mejor.'],['🎀','👑','🧣']],
+ ['🧑‍🚒','el bombero',['Es un trabajo.','Lleva casco y conduce un camión rojo.','Apaga los fuegos.'],['👮','🧑‍⚕️','🧑‍🍳']],
+ ['🧑‍⚕️','la médica',['Es un trabajo.','Trabaja en el hospital.','Nos cura cuando estamos malitos.'],['🧑‍🏫','🧑‍🍳','🧑‍🚒']],
+ ['🧑‍🍳','el cocinero',['Es un trabajo.','Lleva un gorro blanco muy alto.','Hace la comida.'],['🧑‍🌾','👮','🧑‍⚕️']],
+ ['🧹','la escoba',['Está en casa.','Tiene un palo largo.','Sirve para barrer.'],['🪣','🧽','🪥']],
+ ['🪥','el cepillo de dientes',['Lo usamos en el baño.','Le ponemos pasta.','Sirve para lavarnos los dientes.'],['🧼','🧽','🧴']],
+ ['🐌','el caracol',['Es un animal muy lento.','Sale cuando llueve.','Lleva su casa en la espalda.'],['🐢','🐛','🐸']],
+ ['🏰','el castillo',['Es muy grande.','Tiene torres.','Allí viven los reyes y las reinas.'],['🏠','⛺','🏫']],
+ ['🐬','el delfín',['Vive en el mar.','Es muy listo y salta mucho.','Hace «iiii, iiii».'],['🦈','🐋','🐟']]
+];
+/* ¿quién se ha colado? */
+const INT=[
+ ['animales del mar',['🐙','🐟','🐋','🦀','🐬','🦐','🦈'],['🐄','🐶','🦒']],
+ ['ropa',['👕','👖','👗','🧦','🧥','🧣'],['🍌','🚗','🐸']],
+ ['frutas',['🍎','🍌','🍇','🍓','🍐','🍉'],['🧦','✏️','🐱']],
+ ['bichos',['🐝','🐞','🦋','🐜','🐛'],['🐶','🍕','🚲']],
+ ['transportes',['🚗','🚌','✈️','🚲','🚂','🚁'],['🛏️','🍰','🐰']],
+ ['instrumentos de música',['🎸','🥁','🎺','🎹','🎻'],['🍕','🧦','🐢']],
+ ['partes del cuerpo',['👃','👂','👁️','✋','🦶','👄'],['👟','🎩','🍎']],
+ ['muebles de casa',['🛏️','🪑','🛋️','🚪'],['🐸','🍦','🚲']],
+ ['cosas del cole',['✏️','📏','📚','🎒','✂️'],['🧸','🍳','🐴']],
+ ['animales de la granja',['🐄','🐷','🐔','🐑','🐴'],['🦈','🐙','🦒']],
+ ['comida dulce',['🍰','🍭','🍫','🍩','🧁','🍦'],['🥦','🧅','🧀']],
+ ['personajes mágicos',['🧚','🧜‍♀️','🦄','🧙'],['🚜','🧹','🪣']]
+];
+/* parejas mágicas: dibujo, nombre, pareja, pista 1, pista 2, otros */
+const PAR=[
+ ['🐶','el perro','🦴','¿Qué le gusta morder al perro?','Es duro y blanco, y lo entierra en el jardín.',['🥕','🍯','🧶']],
+ ['🐝','la abeja','🌸','¿Dónde se posa la abeja?','Huele muy bien y tiene pétalos.',['🦴','🍌','🔑']],
+ ['🐒','el mono','🍌','¿Qué come el mono?','Es una fruta amarilla y larga.',['🦴','🥕','🧀']],
+ ['🐰','el conejo','🥕','¿Qué come el conejo?','Es naranja y crece debajo de la tierra.',['🍌','🦴','🍯']],
+ ['🌧️','la lluvia','☂️','¿Qué usamos cuando llueve?','Se abre y nos tapa la cabeza.',['🕶️','🧤','🪁']],
+ ['🔑','la llave','🚪','¿Qué abrimos con la llave?','Está en la entrada de casa.',['🪟','🛏️','📦']],
+ ['👸','la reina','👑','¿Qué lleva la reina en la cabeza?','Es de oro y brilla mucho.',['🧢','🎀','🎩']],
+ ['🧚','el hada','🪄','¿Qué usa el hada para hacer magia?','Es un palito con una estrella.',['🧹','✏️','🥄']],
+ ['🧜‍♀️','la sirena','🌊','¿Dónde vive la sirena?','Hay mucha agua salada y olas.',['🏰','🌳','🏜️']],
+ ['👶','el bebé','🍼','¿Con qué toma la leche el bebé?','Es como una botellita pequeña.',['🥤','☕','🍷']],
+ ['🐄','la vaca','🥛','¿Qué nos da la vaca?','Es blanca y la bebemos en el desayuno.',['🍯','🥚','🧶']],
+ ['🐔','la gallina','🥚','¿Qué pone la gallina?','Tiene cáscara y se puede freír.',['🥛','🍯','🧀']],
+ ['🐑','la oveja','🧶','¿Qué nos da la oveja?','Con ella se hacen jerséis calentitos.',['🥛','🥚','🍯']],
+ ['🦶','el pie','🧦','¿Qué nos ponemos en el pie?','Va debajo del zapato.',['🧤','🧢','🧣']],
+ ['✋','la mano','🧤','¿Qué nos ponemos en las manos cuando hace frío?','Tiene cinco dedos.',['🧦','🧢','👢']],
+ ['✏️','el lápiz','📒','¿Dónde escribimos con el lápiz?','Tiene muchas hojas.',['🍽️','🪑','🛏️']],
+ ['🐟','el pez','🐠','¿Con quién nada el pez? Busca a su amigo del agua.','También tiene aletas y escamas.',['🐦','🐈','🐒']],
+ ['🍞','el pan','🧈','¿Qué untamos en el pan del desayuno?','Es amarilla y blandita.',['🧂','🧽','🧼']],
+ ['🕷️','la araña','🕸️','¿Qué teje la araña?','Es como una red pegajosa.',['🧶','🎀','🪢']],
+ ['🪥','el cepillo de dientes','🦷','¿Qué limpiamos con el cepillo?','Están dentro de la boca.',['👂','👃','🦶']]
+];
+/* ¿con qué lo hacemos?: pregunta, verbo para el gesto, objeto, pista */
+const VERB=[
+ ['¿Con qué cortamos el papel?','cortar','✂️','Tiene dos agujeros para meter los dedos.'],['¿Con qué barremos el suelo?','barrer','🧹','Tiene un palo muy largo.'],
+ ['¿Con qué pintamos un cuadro?','pintar','🖌️','Tiene pelitos en la punta y se moja en pintura.'],['¿Con qué escribimos en el cuaderno?','escribir','✏️','Tiene punta y se puede borrar.'],
+ ['¿Con qué comemos la sopa?','comer sopa','🥄','Es redondita, como un cuenco pequeño.'],['¿Con qué cortamos la carne?','cortar la carne','🔪','Corta mucho, ¡cuidado!'],
+ ['¿Con qué abrimos la puerta?','abrir con llave','🔑','Es pequeña y la metemos en la cerradura.'],['¿Con qué hacemos fotos?','hacer una foto','📷','Hace «clic» y tiene un flash.'],
+ ['¿Con qué sabemos qué hora es?','mirar la hora','⏰','Tiene números y suena para despertarnos.'],['¿Con qué nos lavamos las manos?','lavarte las manos','🧼','Hace espuma con el agua.'],
+ ['¿Con qué clavamos un clavo?','clavar','🔨','Es de metal y hace «pum, pum».'],['¿Con qué cosemos la ropa?','coser','🪡','Es muy fina y tiene un agujerito para el hilo.'],
+ ['¿Con qué pescamos peces?','pescar','🎣','Es una caña larga con un hilo.'],['¿Con qué alumbramos en la oscuridad?','alumbrar','🔦','Tiene pilas y una luz.'],
+ ['¿Con qué escuchamos música?','escuchar','🎧','Se ponen en las orejas.'],['¿Con qué medimos una línea?','medir','📏','Es larga y tiene números.'],
+ ['¿Con qué freímos un huevo?','freír','🍳','Se pone en el fuego y tiene un mango.'],['¿Con qué jugamos al fútbol?','chutar','⚽','Es redonda y la pateamos.']
+];
+
+const JUEGOS=[
+ {id:'silaba',ico:'🫧',nombre:'La sílaba perdida',desc:'Completa la palabra con el trozo que falta.'},
+ {id:'slime',ico:'🟢',nombre:'Slime de sílabas',desc:'Ordena las gotas de slime y forma la palabra.'},
+ {id:'fuente',ico:'🐚',nombre:'La fuente de las sirenas',desc:'ga, go, gu, gue, gui: ¿cuál falta?'},
+ {id:'espejo',ico:'🪞',nombre:'El espejo de la reina',desc:'¿Cuál está bien escrita?'},
+ {id:'adivina',ico:'🦄',nombre:'Las adivinanzas del unicornio',desc:'Escucha las pistas y adivina.'},
+ {id:'colado',ico:'🔍',nombre:'¿Quién se ha colado?',desc:'Busca el que no es de la familia.'},
+ {id:'parejas',ico:'💞',nombre:'Parejas mágicas',desc:'¿Qué va con cada dibujo?'},
+ {id:'haciendo',ico:'🛠️',nombre:'¿Con qué lo hacemos?',desc:'Escucha y busca con qué se hace.'}
+];
+
+/* ================= MENÚ ================= */
+function slimeHTML(txt){return `<div class="slime-zona"><div class="slime" id="slime" style="--sc:${una(SLIMEC)}"><i></i></div>${txt?`<div class="bocadillo" id="boca">${txt}</div>`:''}</div>`}
+function menu(){
+  location.hash='';try{speechSynthesis.cancel()}catch(e){}
+  app.innerHTML=`<div class="top"><a class="chip" href="j-bf2696a0fc04c433.html">← Mis juegos</a><div class="marcador">💎 Gemas <b>${gemas}</b></div></div>
+  <h1>🌈 El reino arcoíris 🦄</h1><p class="sub">¡Hola, Ariana! Elige un juego y pinta el arcoíris.</p>
+  ${slimeHTML('¡Soy Blup, tu slime! Vamos a jugar 💖')}
+  <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🌈 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
+  <div class="album"><b>✨ Mi colección de pegatinas</b><div class="pegs">${PEGATINAS.map(p=>`<span class="peg ${pegs.includes(p)?'':'vacia'}">${p}</span>`).join('')}</div></div>
+  <div class="nota"><b>Para el adulto:</b> leed vosotros las consignas (el botón 🔊 las lee en voz alta). Los dibujos no llevan el nombre escrito para que Ariana los nombre. Si falla, primero se le anima a volver a intentarlo; <b>a partir del tercer intento aparecen pistas, una cada vez, pero nunca la solución</b>. Si se agobia, parad y seguid otro día: el juego se queda guardado.</div>`;
+  app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
+}
+
+/* ================= MOTOR ================= */
+let J=null;
+function empezar(id){J={id,ronda:0,fallos:0,items:generar(id)};location.hash=id;pintar()}
+function generar(id){
+  if(id==='silaba'){const p2=PAL.filter(p=>p[2].length===2),p3=PAL.filter(p=>p[2].length===3),p4=PAL.filter(p=>p[2].length===4);
+    return [...pick(p2,2),...pick(p3,3),...pick(p4,3)].map(p=>({p,g:Math.floor(Math.random()*p[2].length)}))}
+  if(id==='slime'){const p3=PAL.filter(p=>p[2].length===3),p4=PAL.filter(p=>p[2].length===4);return [...pick(p3,4),...pick(p4,4)]}
+  if(id==='fuente'){const a=GW.filter(w=>['ga','go','gu'].includes(w[2][w[3]])),b=GW.filter(w=>['gue','gui'].includes(w[2][w[3]]));return sh([...pick(a,4),...pick(b,4)])}
+  if(id==='espejo')return pick(ESP,RONDAS);
+  if(id==='adivina')return pick(ADV,RONDAS);
+  if(id==='colado')return pick(INT,RONDAS).map(([cat,fam,otros])=>({cat,ok:una(otros),fam:pick(fam,3)}));
+  if(id==='parejas')return pick(PAR,RONDAS);
+  if(id==='haciendo')return pick(VERB,RONDAS).map(v=>({v,otros:sh(VERB.filter(x=>x!==v)).slice(0,3)}));
+}
+function cabecera(){
+  return `<div class="top"><button class="chip" id="volver">← Juegos</button><div class="marcador">💎 Gemas <b>${gemas}</b></div></div>
+  <div class="arcoiris">${Array.from({length:RONDAS},(_,i)=>`<i style="${i<J.ronda?'background:'+RAINBOW[i]:''}"></i>`).join('')}</div>`;
+}
+const pistaBox='<div class="pista" id="pista"><span class="ico">✨</span><span id="pistaT"></span></div>';
+let PISTAS=[];      /* pistas de la ronda, en orden: nunca la solución */
+function pintar(){
+  if(J.ronda>=RONDAS)return final();
+  J.fallos=0;J.slot=0;const it=J.items[J.ronda];let c='',voz='';PISTAS=[];
+  if(J.id==='silaba'){
+    const [w,e,s]=it.p,g=it.g,ok=s[g];
+    const otros=sh(SILS.filter(x=>x!==ok&&x[0]!==ok[0])).slice(0,1).concat(sh(SILS.filter(x=>x!==ok&&x[0]===ok[0])).slice(0,1));
+    while(otros.length<2)otros.push(una(SILS.filter(x=>x!==ok&&!otros.includes(x))));
+    J.ok=ok;
+    c=`<div class="titulo">La sílaba perdida</div><div class="consigna">Mira el dibujo. ¿Qué trozo falta?</div>
+    <div class="dibujo">${e}</div><div class="palabra">${s.map((x,i)=>i===g?`<span class="sil hueco" id="hueco">?</span>`:`<span class="sil">${x}</span>`).join('')}</div>
+    <div class="opciones">${sh([ok,...otros]).map(x=>`<button class="op" data-v="${x}">${x}</button>`).join('')}</div>`;
+    PISTAS=[`Dilo despacito dando palmadas: tiene ${s.length} trozos. El que falta es el ${['primero','segundo','tercero','cuarto'][g]}.`,
+      `El trozo que falta empieza por «${ini(ok)}».`,'Mira: ya he quitado uno que no es.'];
+    voz='¿Qué trozo falta?';
+  }
+  if(J.id==='slime'){
+    const [w,e,s]=it;J.ok=s;
+    const extra=una(SILS.filter(x=>!s.includes(x)));
+    c=`<div class="titulo">Slime de sílabas</div><div class="consigna">Toca las gotas en orden para formar la palabra.</div>
+    <div class="dibujo">${e}</div><div class="huecos">${s.map((_,i)=>`<div class="hueco2 ${i===0?'ahora':''}" id="h${i}"></div>`).join('')}</div>
+    <div class="opciones">${sh([...s.map((x,i)=>x+'|'+i),extra+'|x']).map((x,k)=>`<button class="op gota" style="--gc:${['#C7F5E6','#FFD6EC','#E2D6FF','#D6F0FF','#FFF0B8'][k%5]}" data-v="${x}">${x.split('|')[0]}</button>`).join('')}</div>`;
+    PISTAS=[`La palabra tiene ${s.length} trozos. Dila despacito mirando el dibujo: ¿qué trozo suena ahora?`,'__siguiente__','Mira: ya he quitado una gota que no va ahora.'];
+    voz='Ordena las gotas de slime';
+  }
+  if(J.id==='fuente'){
+    const [w,e,s,g]=it,ok=s[g];J.ok=ok;
+    const trampa=GTRAMPA[ok];const otro=una(GOPS.filter(x=>x!==ok&&x!==trampa));
+    c=`<div class="titulo">La fuente de las sirenas</div><div class="consigna">Di el dibujo. ¿Qué concha completa la palabra?</div>
+    <div class="dibujo">${e}</div><div class="palabra">${s.map((x,i)=>i===g?`<span class="sil hueco" id="hueco">?</span>`:`<span class="sil">${x}</span>`).join('')}</div>
+    <div class="opciones">${sh([ok,trampa,otro]).map(x=>`<button class="op" data-v="${x}">🐚 ${x}</button>`).join('')}</div>`;
+    const voc=ok.endsWith('e')?'e':ok.endsWith('i')?'i':ok.slice(-1);
+    PISTAS=[`Dilo despacito: ¿qué vocal suena después de la g?`,
+      ['e','i'].includes(voc)?'Truco de sirena: con la e y la i, para que la g suene suave como en «gato», se esconde una u: gue, gui.':'Truco de sirena: con la a, la o y la u, la g va solita: ga, go, gu.',
+      `Después de la g suena la «${voc}».`,'Mira: ya he quitado una concha que no es.'];
+    voz='¿Qué concha completa la palabra?';
+  }
+  if(J.id==='espejo'){
+    const [w,e,f]=it;J.ok=w;
+    c=`<div class="titulo">El espejo de la reina</div><div class="consigna">El espejo mágico ha escrito tres palabras. ¿Cuál está bien escrita?</div>
+    <div class="dibujo">${e}</div><div class="opciones" style="flex-direction:column;align-items:center">${sh([w,...f]).map(x=>`<button class="op txt" style="min-width:260px" data-v="${x}">👑 ${x}</button>`).join('')}</div>`;
+    const conE=/gu[ei]/.test(w);
+    PISTAS=['Lee cada palabra muy despacito. ¿Cuál suena igual que el dibujo?',
+      conE?'Recuerda: «ge» y «gi» suenan como la j. Para que suene como en «gato» con la e y la i, hay que poner una u: gue, gui.':'Recuerda: con la a, la o y la u, la g va solita: ga, go, gu. ¡No necesita la u!','Mira: ya he quitado una que no es.'];
+    voz='¿Cuál está bien escrita?';
+  }
+  if(J.id==='adivina'){
+    const [e,n,p,o]=it;J.ok=e;J.adv=p;
+    c=`<div class="titulo">Las adivinanzas del unicornio</div><div class="adiv" id="adiv"><span>🦄 ${p[0]}</span><span>${p[1]}</span></div>
+    <button class="oir" id="oir">🔊 Escuchar</button>
+    <div class="opciones">${sh([e,...o]).map(x=>`<button class="op emo" data-v="${x}">${x}</button>`).join('')}</div>`;
+    PISTAS=[`Otra pista: ${p[2]}`,`Empieza por «${n.split(' ')[1][0]}»… ${n.split(' ')[0]} ${n.split(' ')[1][0]}…`,'Mira: ya he quitado uno que no es.'];
+    voz=p[0]+' '+p[1]+' ¿Qué es?';
+  }
+  if(J.id==='colado'){
+    J.ok=it.ok;
+    c=`<div class="titulo">¿Quién se ha colado?</div><div class="consigna">Tres son de la misma familia. ¡Uno se ha colado! ¿Cuál es?</div>
+    <div class="opciones" style="margin-top:8px">${sh([...it.fam,it.ok]).map(x=>`<button class="op emo" data-v="${x}">${x}</button>`).join('')}</div>`;
+    PISTAS=['Nombra cada dibujo en voz alta. ¿Cuál no pega con los demás?',`Tres son ${it.cat}.`,'Mira: ya he quitado uno que sí es de la familia.'];
+    voz='¿Quién se ha colado?';
+  }
+  if(J.id==='parejas'){
+    const [e,n,p,h1,h2,o]=it;J.ok=p;
+    c=`<div class="titulo">Parejas mágicas</div><div class="consigna">¿Qué va con ${n}?</div>
+    <div class="dibujo">${e}</div><div class="opciones">${sh([p,...o]).map(x=>`<button class="op emo" data-v="${x}">${x}</button>`).join('')}</div>`;
+    PISTAS=[h1,h2,'Mira: ya he quitado uno que no es.'];
+    voz='¿Qué va con '+n+'?';
+  }
+  if(J.id==='haciendo'){
+    const [q,v,e,d]=it.v;J.ok=e;
+    c=`<div class="titulo">¿Con qué lo hacemos?</div><div class="adiv"><span>${q}</span></div><button class="oir" id="oir">🔊 Escuchar</button>
+    <div class="opciones">${sh([e,...it.otros.map(x=>x[2])]).map(x=>`<button class="op emo" data-v="${x}">${x}</button>`).join('')}</div>`;
+    PISTAS=[`Haz como si fueras a ${v} con las manos. ¿Qué tendrías en la mano?`,d,'Mira: ya he quitado uno que no es.'];
+    voz=q;
+  }
+  app.innerHTML=cabecera()+`<div class="campo" id="campo">${c}${pistaBox}<div class="msg" id="msg"></div>${slimeHTML('')}</div>`;
+  document.getElementById('volver').onclick=menu;
+  const oir=document.getElementById('oir');if(oir)oir.onclick=()=>decir(voz);
+  if(['adivina','haciendo'].includes(J.id))setTimeout(()=>decir(voz),350);
+  app.querySelectorAll('.op[data-v]').forEach(b=>b.onclick=()=>responder(b));
+}
+function slime(cl){const s=document.getElementById('slime');if(!s)return;s.classList.remove('feliz','triste');void s.offsetWidth;s.classList.add(cl)}
+function fiesta(){const f=document.createElement('div');f.className='fiesta';const em=['💖','⭐','🌈','✨','🦄','💎','🫧'];
+  for(let i=0;i<16;i++){const s=document.createElement('span');s.textContent=una(em);s.style.left=Math.random()*95+'%';s.style.animationDelay=Math.random()*.4+'s';f.appendChild(s)}
+  document.getElementById('campo').appendChild(f)}
+const ANIMO=['¡Casi! Prueba otra vez 💪','¡Tú puedes! Inténtalo de nuevo','Uy, ese no. ¡Otra vez!'];
+const BIEN=['💖 ¡Genial!','🌈 ¡Muy bien!','✨ ¡Mágico!','🦄 ¡Bravo!','💎 ¡Una gema!','🧜‍♀️ ¡Fantástico!'];
+function quitarUno(){const malos=[...app.querySelectorAll('.op[data-v]')].filter(b=>!esCorrecta(b)&&!b.classList.contains('fuera')&&b.style.visibility!=='hidden');
+  if(malos.length>1)una(malos).classList.add('fuera')}
+function esCorrecta(b){if(J.id==='slime'){return b.style.visibility!=='hidden'&&b.dataset.v.split('|')[0]===J.ok[J.slot]}return b.dataset.v===J.ok}
+function ini(s){return /^(ll|ch|rr)/.test(s)?s.slice(0,2):s[0]}
+function darPista(){
+  const n=J.fallos-2;if(n<0)return;              /* las pistas empiezan en el 3.er intento */
+  let t=PISTAS[Math.min(n,PISTAS.length-1)];
+  if(t==='__siguiente__'){const s=J.ok[J.slot];t=`El trozo que va ahora empieza por «${ini(s)}».`}
+  if(t.startsWith('Mira: ya he quitado'))quitarUno();
+  if(J.id==='silaba'&&n===0)document.getElementById('hueco').classList.add('marca');
+  const p=document.getElementById('pista');p.classList.remove('si');void p.offsetWidth;p.classList.add('si');document.getElementById('pistaT').textContent=t;sPista();
+}
+function acierto(btn){
+  J.bloq=true;btn.classList.add('ok');gemas++;guardar();sBien();slime('feliz');
+  if(['silaba','fuente'].includes(J.id)){const h=document.getElementById('hueco');h.textContent=btn.dataset.v;h.classList.remove('hueco','marca')}
+  fiesta();const g=document.createElement('div');g.className='bien';g.textContent=una(BIEN);document.getElementById('campo').appendChild(g);
+  setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1400);
+}
+function responder(btn){
+  if(J.bloq||btn.classList.contains('fuera'))return;
+  if(J.id==='slime'){
+    if(esCorrecta(btn)){const h=document.getElementById('h'+J.slot);h.textContent=btn.dataset.v.split('|')[0];h.classList.add('lleno');h.classList.remove('ahora');btn.style.visibility='hidden';tono([784+J.slot*120],.08,'triangle');
+      J.slot++;document.getElementById('pista').classList.remove('si');app.querySelectorAll('.op.fuera').forEach(b=>b.classList.remove('fuera'));
+      if(J.slot>=J.ok.length){J.bloq=true;gemas++;guardar();sBien();slime('feliz');fiesta();const g=document.createElement('div');g.className='bien';g.textContent=una(BIEN);document.getElementById('campo').appendChild(g);
+        setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1400)}
+      else document.getElementById('h'+J.slot).classList.add('ahora');return}
+    J.fallos++;btn.classList.add('mal');setTimeout(()=>btn.classList.remove('mal'),450);sMal();slime('triste');
+    document.getElementById('msg').textContent=una(ANIMO);darPista();return}
+  if(esCorrecta(btn))return acierto(btn);
+  J.fallos++;btn.classList.add('mal');setTimeout(()=>btn.classList.remove('mal'),450);sMal();slime('triste');
+  document.getElementById('msg').textContent=una(ANIMO);darPista();
+}
+function final(){
+  est[J.id]=(est[J.id]||0)+1;
+  const nuevas=PEGATINAS.filter(p=>!pegs.includes(p));const peg=nuevas.length?una(nuevas):una(PEGATINAS);if(!pegs.includes(peg))pegs.push(peg);guardar();sFin();
+  app.innerHTML=cabecera()+`<div class="campo" id="campo"><div class="final"><div class="premio">${peg}</div><div class="titulo" style="font-size:32px">¡Has pintado todo el arcoíris! 🌈</div>
+  <div class="consigna" style="margin:0">Has ganado una pegatina nueva para tu colección. ✨</div>
+  <div class="btns"><button class="btn" id="otra">Jugar otra vez</button><button class="btn blanco" id="menu">Otros juegos</button></div></div></div>`;
+  fiesta();
+  document.getElementById('volver').onclick=menu;document.getElementById('menu').onclick=menu;document.getElementById('otra').onclick=()=>empezar(J.id);
+}
+/* ---------- juego del día (abiertos.js) ---------- */
+const NINO='Ariana';
+let PICK_CTX=null;
+function abierto(id){return !window.ROT||ROT.abierto(NINO,id)}
+function msgCerrado(id){if(!window.ROT)return '';const a=ROT.actual(NINO);if(ROT.hechoHoy(NINO))return '✅ ¡Juego de hoy hecho! Mañana toca «'+ROT.nombre(NINO,ROT.siguiente(NINO))+'».';return '🔒 Hoy toca «'+ROT.nombre(NINO,a)+'».'}
+function verPal(b){if(!b.dataset.l)b.dataset.l=b.innerHTML;const v=b.classList.toggle('visto');b.innerHTML=v?b.dataset.w+' <small style="opacity:.75">· ocultar</small>':b.dataset.l}
+function avisoCerrado(txt){let a=document.querySelector('.aviso-cerrado');if(!a){a=document.createElement('div');a.className='aviso-cerrado';document.body.appendChild(a)}a.textContent=txt;clearTimeout(a._t);a._t=setTimeout(()=>a.remove(),3200)}
+/* palabras y dibujos nuevos en cada vuelta: se evita repetir lo ya salido en ese juego */
+function pickNuevo(a,n){const base=sh(a).slice(0,n);if(!PICK_CTX)return base;const k='vistos-'+NINO+'-'+PICK_CTX;let V;try{V=new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch(e){V=new Set()}
+ const id=x=>JSON.stringify(x);let nuevos=sh(a.filter(x=>!V.has(id(x))));if(nuevos.length<n){a.forEach(x=>V.delete(id(x)));nuevos=nuevos.concat(sh(a.filter(x=>!nuevos.includes(x))))}
+ const r=nuevos.slice(0,n);r.forEach(x=>V.add(id(x)));try{localStorage.setItem(k,JSON.stringify([...V].slice(-600)))}catch(e){}return r}
+{const _m=menu,_e=empezar,_f=final;
+ menu=function(){const r=_m.apply(this,arguments);if(!window.ROT)return r;const a=ROT.actual(NINO),h=ROT.hechoHoy(NINO);
+  document.querySelectorAll('.juego[data-id]').forEach(b=>{const id=b.dataset.id,t=b.querySelector('.t')||b;
+   if(abierto(id)){b.classList.add('hoy');t.insertAdjacentHTML('beforeend','<span class="candado hoy-b">⭐ Juego de hoy</span>');return}
+   b.classList.add('cerrado');b.setAttribute('aria-disabled','true');b.onclick=()=>avisoCerrado(msgCerrado(id));
+   t.insertAdjacentHTML('beforeend','<span class="candado">'+(id===a&&h?'✅ Hecho hoy':'🔒 Otro día')+'</span>')});
+  const m=document.querySelector('.menu');if(m&&!document.querySelector('.dia-msg'))m.insertAdjacentHTML('beforebegin','<div class="dia-msg">'+(h?'✅ ¡Juego de hoy hecho! Mañana toca <b>'+ROT.nombre(NINO,ROT.siguiente(NINO))+'</b>.':'Hoy toca <b>'+ROT.nombre(NINO,a)+'</b>'+(ROT.enRotacion(NINO,a)&&!document.querySelector('.juego[data-id="'+a+'"]')?' (en «Mis juegos»)':'')+'.')+'</div>');
+  return r};
+ empezar=function(id){if(!abierto(id)){menu();avisoCerrado(msgCerrado(id));return}PICK_CTX=id;try{return _e.apply(this,arguments)}finally{PICK_CTX=null}};
+
+function enviarSalma(txt){location.href='https://wa.me/34614245087?text='+encodeURIComponent(txt)}
+function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=document.createElement('div');d.className='wa-caja';
+ d.innerHTML='<label class="com-l">💬 ¿Queréis contarle algo a Salma? <span>(opcional)</span></label><textarea class="com-t" rows="3" placeholder="Por ejemplo: le ha costado la r, se cansó al final, lo ha hecho solo…"></textarea><button class="wa-btn mail">✉️ Enviar a Salma</button><button class="wa-otro">o enviarlo por WhatsApp</button><div class="env-ok"></div>';
+ const ta=d.querySelector('textarea'),ok=d.querySelector('.env-ok'),bm=d.querySelector('.mail');ta.addEventListener('input',()=>{if(ok.textContent.startsWith('✅'))ok.textContent=''});
+ bm.onclick=async()=>{bm.disabled=true;bm.textContent='Enviando…';const com=ta.value.trim();const l=base.split('\n');
+  const listo=()=>{ta.value='';bm.disabled=false;bm.textContent='✉️ Enviar otro comentario';ok.textContent='✅ ¡Enviado a Salma! Gracias.'},fallo=()=>{bm.disabled=false;bm.textContent='✉️ Enviar a Salma';ok.textContent='No se ha podido enviar. Probad otra vez o por WhatsApp.'};let hecho=false;const espera=new Promise(res=>setTimeout(()=>res('rapido'),2500));const envio=fetch('https://formsubmit.co/ajax/atbesalma@gmail.com',{keepalive:true,method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+   body:JSON.stringify({_subject:'Juegos en casa · '+l[0].replace('📊 ',''),_template:'box',_captcha:'false','Juego':l[0].replace('📊 ',''),'Resultado':(l[1]||'').replace('✅ ',''),'Fecha':(l[2]||'').replace('📅 ',''),'Comentario de la familia':com||'(sin comentario)'})}).then(r=>{if(!r.ok)throw 0;return 'ok'});
+   envio.catch(()=>{if(hecho)ok.textContent='⚠️ Parece que no ha llegado. Probad otra vez o por WhatsApp.'});
+   try{await Promise.race([envio,espera]);hecho=true;listo()}catch(e){fallo()}};
+ d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
+{const _f2=final;final=function(){const r=_f2.apply(this,arguments);try{const j=JUEGOS.find(x=>x.id===J.id);const p=J.primera||0;
+  const txt='📊 '+NINO+' · '+(j?j.nombre:J.id)+'\n✅ '+p+' de '+RONDAS+' a la primera\n📅 '+fechaHoy()+(window.ROT?' · vuelta '+ROT.vuelta(NINO):'')+'\n💬 Comentario: ';
+  const fin=document.querySelector('.final')||document.getElementById('app');fin.appendChild(botonWA(txt));const ot=document.getElementById('otra');if(ot&&window.ROT&&!ROT.abierto(NINO,J.id))ot.remove()}catch(e){}return r}}
+ final=(function(g){return function(){if(window.ROT&&J)ROT.completar(NINO,J.id);return g.apply(this,arguments)}})(final);/*if(window.ROT&&J)ROT.completar(NINO,J.id);*/}
+
+
+const h=location.hash.slice(1);
+if(JUEGOS.some(j=>j.id===h))empezar(h);else menu();
+addEventListener('hashchange',()=>{const k=location.hash.slice(1);if(JUEGOS.some(j=>j.id===k)&&(!J||J.id!==k||J.ronda>=RONDAS))empezar(k)});
+</script>
+</body></html>
