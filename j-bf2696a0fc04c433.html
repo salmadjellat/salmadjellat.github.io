@@ -32,7 +32,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #7FB1
 <script>document.getElementById('out').onclick=()=>{try{localStorage.removeItem('zona')}catch(e){};location.href='zona-f1cda2.html'};</script>
 <script>function candados(){if(!window.ROT)return;const N='Ariana',a=ROT.actual(N),h=ROT.hechoHoy(N);
  document.querySelectorAll('a.game').forEach(el=>{if(!el.dataset.h)el.dataset.h=el.getAttribute('href');const hh=el.dataset.h,k=hh.indexOf('#')>=0?hh.split('#')[1]:hh.replace(/^j-[0-9a-f]+-/,'').replace('.html','');
-  let ab,txt;if(!ROT.enRotacion(N,k)){ab=true;txt=''}else{ab=ROT.abierto(N,k);txt=ab?'⭐ Juego de hoy':(k===a&&h?'✅ Hecho hoy':'🔒 Otro día')}
+  let ab,txt;if(!ROT.enRotacion(N,k)){ab=true;txt=''}else{ab=ROT.abierto(N,k);txt=ab?'':'✅ Hecho hoy · mañana otra vez'}
   el.classList.toggle('cerrado',!ab);if(!ab){el.removeAttribute('href');el.setAttribute('aria-disabled','true')}else{el.setAttribute('href',el.dataset.h);el.removeAttribute('aria-disabled')}
   const t=el.querySelector('.tx');const b=t&&t.querySelector('.candado');if(b)b.remove();if(txt&&t)t.insertAdjacentHTML('beforeend','<span class="candado">'+txt+'</span>')})}candados();addEventListener('pageshow',candados);</script>
 </body></html>

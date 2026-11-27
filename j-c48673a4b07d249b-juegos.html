@@ -177,7 +177,7 @@ function casi(w,n){const out=new Set();let tries=0;
   else{/* inversa ↔ directa: «al»→«la», «pla»→«pal» */const c=[];for(let i=0;i<a.length-1;i++){const v=VOC.includes(a[i]),v2=VOC.includes(a[i+1]);if(v!==v2&&a[i]!==' '&&a[i+1]!==' ')c.push(i)}if(!c.length)continue;const i=c[Math.floor(Math.random()*c.length)];[a[i],a[i+1]]=[a[i+1],a[i]]}
   const s=a.join('');if(s!==w&&!TODAS.has(s))out.add(s)}
  return [...out]}
-const NIVEL=()=>{const v=window.ROT?ROT.vuelta(NINO):1;return Math.min(3,v)};
+const NIVEL=()=>{const v=window.ROT?ROT.vuelta(NINO,PICK_CTX||(J&&J.id)):1;return Math.min(3,v)};
 const NOMBRES_NIVEL={1:'Nivel 1 · inversas y trabadas',2:'Nivel 2 · palabras largas',3:'Nivel 3 · experto'};
 const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const pick=(a,n)=>pickNuevo(a,n);
@@ -217,7 +217,7 @@ function menu(){
   <h1>Expedición biólogo</h1><p class="sub">Elige una misión. ¡Cada acierto es un descubrimiento!</p>
   <div class="nivel-chip">🧭 ${NOMBRES_NIVEL[NIVEL()]}</div>
   <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🏆 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
-  <div class="nota"><b>Para el adulto:</b> cada día se abre un juego. Cuando Arturo termina todos, vuelven a empezar con palabras nuevas y un nivel más difícil (hasta el nivel 3). Cada juego tiene 10-12 rondas. Dentro de cada juego, el botón «👀 Para el adulto» explica qué hacer.</div>`;
+  <div class="nota"><b>Para el adulto:</b> todos los juegos están abiertos, pero cada uno se puede hacer una vez al día: cuando Arturo termina uno, se cierra hasta mañana. Cada vez que repite un juego salen palabras nuevas y sube de nivel (hasta el nivel 3). Cada juego tiene 10-12 rondas. Dentro de cada juego, el botón «👀 Para el adulto» explica qué hacer.</div>`;
   app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
   try{precargarFotos()}catch(e){}
 }
@@ -331,7 +331,7 @@ function final(){clearInterval(J.tick);
 
 /* ---------- juego del día (abiertos.js) ---------- */
 function abierto(id){return !window.ROT||ROT.abierto(NINO,id)}
-function msgCerrado(id){if(!window.ROT)return '';const a=ROT.actual(NINO);if(ROT.hechoHoy(NINO))return '✅ ¡Juego de hoy hecho! Mañana toca «'+ROT.nombre(NINO,ROT.siguiente(NINO))+'».';return '🔒 Hoy toca «'+ROT.nombre(NINO,a)+'».'}
+function msgCerrado(id){return '✅ Este juego ya lo has hecho hoy. ¡Mañana podrás volver a jugarlo! Mientras, prueba otro.'}
 function verPal(b){if(!b.dataset.l)b.dataset.l=b.innerHTML;const v=b.classList.toggle('visto');b.innerHTML=v?b.dataset.w+' <small style="opacity:.75">· ocultar</small>':b.dataset.l}
 function avisoCerrado(txt){let a=document.querySelector('.aviso-cerrado');if(!a){a=document.createElement('div');a.className='aviso-cerrado';document.body.appendChild(a)}a.textContent=txt;clearTimeout(a._t);a._t=setTimeout(()=>a.remove(),3200)}
 /* palabras y dibujos nuevos en cada vuelta: se evita repetir lo ya salido en ese juego */
@@ -341,10 +341,10 @@ function pickNuevo(a,n){const base=sh(a).slice(0,n);if(!PICK_CTX)return base;con
 {const _m=menu,_e=empezar,_f=final;
  menu=function(){const r=_m.apply(this,arguments);if(!window.ROT)return r;const a=ROT.actual(NINO),h=ROT.hechoHoy(NINO);
   document.querySelectorAll('.juego[data-id]').forEach(b=>{const id=b.dataset.id,t=b.querySelector('.t')||b;
-   if(abierto(id)){b.classList.add('hoy');t.insertAdjacentHTML('beforeend','<span class="candado hoy-b">⭐ Juego de hoy</span>');return}
+   if(abierto(id))return;
    b.classList.add('cerrado');b.setAttribute('aria-disabled','true');b.onclick=()=>avisoCerrado(msgCerrado(id));
-   t.insertAdjacentHTML('beforeend','<span class="candado">'+(id===a&&h?'✅ Hecho hoy':'🔒 Otro día')+'</span>')});
-  const m=document.querySelector('.menu');if(m&&!document.querySelector('.dia-msg'))m.insertAdjacentHTML('beforebegin','<div class="dia-msg">'+(h?'✅ ¡Juego de hoy hecho! Mañana toca <b>'+ROT.nombre(NINO,ROT.siguiente(NINO))+'</b>.':'Hoy toca <b>'+ROT.nombre(NINO,a)+'</b>'+(ROT.enRotacion(NINO,a)&&!document.querySelector('.juego[data-id="'+a+'"]')?' (en «Mis juegos»)':'')+'.')+'</div>');
+   t.insertAdjacentHTML('beforeend','<span class="candado">✅ Hecho hoy · mañana otra vez</span>')});
+  const m=document.querySelector('.menu');if(m&&!document.querySelector('.dia-msg'))m.insertAdjacentHTML('beforebegin','<div class="dia-msg">'+(h?'🎉 ¡Has hecho todos los juegos de hoy! Mañana se vuelven a abrir.':'Puedes jugar a todos los juegos. Cada uno, una vez al día'+(ROT.hechosHoy(NINO)?' · hoy llevas <b>'+ROT.hechosHoy(NINO)+' de '+ROT.total(NINO)+'</b>':'')+'.')+'</div>');
   return r};
  empezar=function(id){if(!abierto(id)){menu();avisoCerrado(msgCerrado(id));return}PICK_CTX=id;try{return _e.apply(this,arguments)}finally{PICK_CTX=null}};
 
@@ -360,7 +360,7 @@ function botonWA(txt){const base=txt.replace(/\n💬 Comentario: $/,'');const d=
  d.querySelector('.wa-otro').onclick=()=>{const com=ta.value.trim();enviarSalma(base+(com?'\n💬 '+com:''))};return d}
 function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'numeric',month:'numeric',year:'numeric'})}
 {const _f2=final;final=function(){const r=_f2.apply(this,arguments);try{const j=JUEGOS.find(x=>x.id===J.id);const p=J.primera||0;
-  const txt='📊 '+NINO+' · '+(j?j.nombre:J.id)+'\n✅ '+p+' de '+RONDAS+' a la primera · nivel '+(J.nivel||1)+'\n📅 '+fechaHoy()+(window.ROT?' · vuelta '+ROT.vuelta(NINO):'')+'\n💬 Comentario: ';
+  const txt='📊 '+NINO+' · '+(j?j.nombre:J.id)+'\n✅ '+p+' de '+RONDAS+' a la primera · nivel '+(J.nivel||1)+'\n📅 '+fechaHoy()+(window.ROT?' · vez nº '+ROT.vuelta(NINO,J.id):'')+'\n💬 Comentario: ';
   const fin=document.querySelector('.final')||document.getElementById('app');fin.appendChild(botonWA(txt));const ot=document.getElementById('otra');if(ot&&window.ROT&&!ROT.abierto(NINO,J.id))ot.remove()}catch(e){}return r}}
  final=(function(g){return function(){if(window.ROT&&J)ROT.completar(NINO,J.id);return g.apply(this,arguments)}})(final);/*if(window.ROT&&J)ROT.completar(NINO,J.id);*/}
 
