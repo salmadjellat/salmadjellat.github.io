@@ -77,6 +77,11 @@ h1{margin:0;font-size:clamp(30px,7vw,46px);color:#fff;text-shadow:0 3px 0 rgba(0
 .juego.hoy{box-shadow:0 0 0 4px #F2C94C,0 8px 20px rgba(0,0,0,.12)}.hoy-b{background:#FFF3C4!important;color:#8A6A00!important}.dia-msg{background:rgba(255,255,255,.92);color:#4A3326;border-radius:16px;padding:10px 14px;font-weight:700;margin:4px 0 10px;text-align:center}
 .juego.cerrado{opacity:.55;filter:grayscale(.7);cursor:not-allowed}.juego.cerrado:hover{transform:none}.candado{display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#8A6E5C;background:#F1E8DC;border-radius:999px;padding:2px 10px}.modal-cod{position:fixed;inset:0;background:rgba(40,25,15,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}.caja-cod{background:#fff;border-radius:22px;padding:22px;max-width:360px;width:100%;text-align:center;color:#4A3326;font-family:Nunito,Verdana,sans-serif}.caja-cod b{font-size:20px}.caja-cod p{margin:6px 0 12px;color:#7A6252}.caja-cod input{width:100%;font:inherit;font-size:24px;font-weight:800;text-align:center;letter-spacing:.12em;padding:10px;border:2px solid #E8D9C5;border-radius:14px;text-transform:uppercase}.err-cod{color:#A2403B;font-weight:700;min-height:22px;margin-top:6px;font-size:14px}.bts-cod{display:flex;gap:10px;margin-top:8px}.bts-cod button{flex:1;font:inherit;font-weight:800;border-radius:14px;padding:12px;border:2px solid #E8D9C5;background:#fff;color:#6F4A30;cursor:pointer}.bts-cod .cod-si{background:#6F4A30;color:#fff;border-color:#6F4A30}.tengo-cod{display:block;margin:14px auto 0;font:inherit;font-weight:800;background:#fff;color:#6F4A30;border:2px dashed #C9B6A0;border-radius:999px;padding:10px 18px;cursor:pointer}
 .aviso-cerrado{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4A3326;color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;z-index:99;max-width:90vw;text-align:center}
+
+/* Mayúsculas: los niños leen en mayúscula */
+body{text-transform:uppercase}
+button,select{text-transform:inherit}
+.nota,.nota *,details,details *,.wa-caja,.wa-caja *,textarea,input,.aviso-cerrado{text-transform:none}
 </style><script>document.write('<script src="abiertos.js?t='+Date.now()+'"><\/script>')</script></head><body>
 <div class="wrap" id="app"></div>
 <script>
@@ -102,12 +107,28 @@ const GRUPOS={m:['mono','moto','mano','manzana','mariposa'],s:['sol','silla','se
 const PARES=[['m','s'],['p','t'],['l','m'],['c','p'],['s','t'],['c','m'],['l','s']];
 const RIMAS=[['gato','pato','zapato'],['foca','boca'],['pelota','bota'],['caracol','sol'],['manzana','ventana'],['ratón','camión','león','corazón'],['abeja','oveja'],['tortuga','lechuga'],['conejo','espejo'],['tomate','chocolate']];
 
+
+/* ---------- lectura con m, p, n, s, t, l (sílabas directas, hasta 3 sílabas) ---------- */
+const LW={mano:['✋',['ma','no']],mono:['🐒',['mo','no']],moto:['🏍️',['mo','to']],pato:['🦆',['pa','to']],sapo:['🐸',['sa','po']],seta:['🍄',['se','ta']],sopa:['🍲',['so','pa']],
+ luna:['🌙',['lu','na']],lupa:['🔍',['lu','pa']],mapa:['🗺️',['ma','pa']],pino:['🌲',['pi','no']],lata:['🥫',['la','ta']],pila:['🔋',['pi','la']],ola:['🌊',['o','la']],oso:['🐻',['o','so']],
+ sol:['☀️',['sol']],pan:['🍞',['pan']],sal:['🧂',['sal']],pie:['🦶',['pie']],limón:['🍋',['li','món']],melón:['🍈',['me','lón']],patín:['🛼',['pa','tín']],
+ tomate:['🍅',['to','ma','te']],patata:['🥔',['pa','ta','ta']],pelota:['⚽',['pe','lo','ta']],paloma:['🕊️',['pa','lo','ma']],maleta:['🧳',['ma','le','ta']],pepino:['🥒',['pe','pi','no']]};
+const LWK=Object.keys(LW);
+const CONS=['m','p','n','s','t','l'];
+const quitaTilde=w=>w.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function parecidas(w,n){const out=new Set();let k=0;while(out.size<n&&k<200){k++;const r=[...w];const idx=r.map((c,i)=>CONS.includes(c)?i:-1).filter(i=>i>=0);if(!idx.length)break;const i=idx[Math.floor(Math.random()*idx.length)];r[i]=sh(CONS.filter(c=>c!==r[i]))[0];const x=r.join('');if(x!==w&&!LW[x])out.add(x)}return [...out]}
+
 const JUEGOS=[
  {id:'silabas',ico:'👏',nombre:'Palmadas de sílabas',desc:'¿Cuántas palmadas tiene?'},
  {id:'termina',ico:'🧩',nombre:'Termina la palabra',desc:'Elige la sílaba que falta.'},
  {id:'inicial',ico:'🔤',nombre:'¿Por qué letra empieza?',desc:'Busca la primera letra.'},
  {id:'porterias',ico:'🥅',nombre:'Las dos porterías',desc:'Chuta cada dibujo a su portería.'},
  {id:'rimas',ico:'🎵',nombre:'Cazarrimas',desc:'¿Cuál suena igual al final?'},
+ {id:'leebusca',ico:'📖',nombre:'Lee y busca',desc:'Lee la palabra y busca su dibujo.'},
+ {id:'rodea',ico:'⭕',nombre:'Rodea la buena',desc:'¿Qué palabra es la del dibujo?'},
+ {id:'letra',ico:'✏️',nombre:'La letra que falta',desc:'Completa la palabra con su letra.'},
+ {id:'une',ico:'🔗',nombre:'Une cada palabra',desc:'Une las palabras con sus dibujos.'},
+ {id:'donde',ico:'🔎',nombre:'¿Dónde está la letra?',desc:'¿En qué sílaba está?'},
 ];
 
 /* ---------- menú ---------- */
@@ -128,6 +149,10 @@ function generar(id){
   if(id==='termina')return pick(BIS,RONDAS);
   if(id==='inicial')return pick(INI,RONDAS);
   if(id==='porterias'){const [a,b]=pick(PARES,1)[0];const it=sh([...pick(GRUPOS[a],4).map(w=>({w,l:a})),...pick(GRUPOS[b],4).map(w=>({w,l:b}))]);it.par=sh([a,b]);return it}
+  if(id==='leebusca'||id==='rodea')return pick(LWK,RONDAS);
+  if(id==='letra')return pick(LWK.filter(w=>[...w].some(c=>CONS.includes(c))),RONDAS).map(w=>{const idx=[...w].map((c,i)=>CONS.includes(c)?i:-1).filter(i=>i>=0);return {w,i:idx[Math.floor(Math.random()*idx.length)]}});
+  if(id==='une')return Array.from({length:RONDAS},()=>pick(LWK,3));
+  if(id==='donde')return pick(LWK.filter(w=>LW[w][1].length>=2),RONDAS).map(w=>{const sl=LW[w][1];const letras=[...new Set([...quitaTilde(w)].filter(c=>CONS.includes(c)))].filter(c=>sl.filter(x=>quitaTilde(x).includes(c)).length===1);const c=letras.length?letras[Math.floor(Math.random()*letras.length)]:quitaTilde(sl[0])[0];return {w,c,ok:String(sl.findIndex(x=>quitaTilde(x).includes(c)))}});
   if(id==='rimas')return pick(RIMAS,RONDAS).map(g=>{const [a,b]=pick(g,2);const otros=pick(RIMAS.filter(x=>x!==g),2).map(x=>pick(x,1)[0]);return [a,b,otros]});
 }
 function cabecera(){
@@ -166,14 +191,41 @@ function pintar(){
     cuerpo=`<div class="titulo">Cazarrimas</div><div class="consigna">¿Cuál termina igual que este?</div>
     <div class="dibujo">${E[a]}</div><div class="opciones">${sh([b,...otros]).map(s=>`<button class="op emo" data-v="${s}">${E[s]}</button>`).join('')}</div>`;
   }
+  if(J.id==='leebusca'){const otros=pick(LWK.filter(x=>x!==it),3);
+    cuerpo=`<div class="titulo">Lee y busca</div><div class="consigna">Lee la palabra. ¿Cuál es su dibujo?</div>
+    <div class="palabra"><span class="sil" style="min-width:0">${it}</span></div><div class="opciones">${sh([it,...otros]).map(x=>`<button class="op emo" data-v="${x}">${LW[x][0]}</button>`).join('')}</div>`}
+  if(J.id==='rodea'){const p=parecidas(it,2);while(p.length<2)p.push(pick(LWK.filter(x=>x!==it&&!p.includes(x)),1)[0]);
+    cuerpo=`<div class="titulo">Rodea la buena</div><div class="consigna">Mira el dibujo y lee las palabras. ¿Cuál es la buena?</div>
+    <div class="dibujo">${LW[it][0]}</div><div class="opciones" style="flex-direction:column;align-items:center">${sh([it,...p]).map(x=>`<button class="op" style="min-width:240px" data-v="${x}">${x}</button>`).join('')}</div>`}
+  if(J.id==='letra'){const w=it.w,i=it.i;const ok=w[i];const otras=sh(CONS.filter(c=>c!==ok)).slice(0,2);
+    cuerpo=`<div class="titulo">La letra que falta</div><div class="consigna">Di el dibujo despacito. ¿Qué letra falta?</div>
+    <div class="dibujo">${LW[w][0]}</div><div class="palabra"><span class="sil" style="min-width:0;letter-spacing:.08em">${[...w].map((c,k)=>k===i?'<span id="hueco" style="color:#B9C4CC">_</span>':c).join('')}</span></div>
+    <div class="opciones">${sh([ok,...otras]).map(x=>`<button class="op" data-v="${x}">${x}</button>`).join('')}</div>`}
+  if(J.id==='une'){J.sel=null;J.hechos=0;
+    cuerpo=`<div class="titulo">Une cada palabra</div><div class="consigna">Toca una palabra y después su dibujo.</div>
+    <div class="une" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:520px">
+      <div style="display:flex;flex-direction:column;gap:12px">${sh(it).map(x=>`<button class="op upal" data-w="${x}" style="font-size:clamp(28px,7vw,40px)">${x}</button>`).join('')}</div>
+      <div style="display:flex;flex-direction:column;gap:12px">${sh(it).map(x=>`<button class="op emo udib" data-w="${x}">${LW[x][0]}</button>`).join('')}</div></div>`}
+  if(J.id==='donde'){const sl=LW[it.w][1];
+    cuerpo=`<div class="titulo">¿Dónde está la letra?</div><div class="consigna">Lee la palabra. ¿En qué trozo está la <b style="font-size:1.3em">${it.c}</b>? Tócalo.</div>
+    <div class="dibujo" style="font-size:clamp(70px,16vw,100px)">${LW[it.w][0]}</div>
+    <div class="palabra">${sl.map((x,k)=>`<button class="sil op" data-v="${k}" style="min-width:90px">${x}</button>`).join('')}</div>`}
   app.innerHTML=cabecera()+`<div class="campo" id="campo">${cuerpo}<div class="msg" id="msg"></div></div>`;
+  if(J.id==='une'){app.querySelectorAll('.upal').forEach(b=>b.onclick=()=>{if(b.classList.contains('ok'))return;app.querySelectorAll('.upal').forEach(x=>x.style.outline='');J.sel=b;b.style.outline='5px solid #F2B800'});
+    app.querySelectorAll('.udib').forEach(b=>b.onclick=()=>{if(!J.sel||b.classList.contains('ok')||J.bloq)return;
+      if(b.dataset.w===J.sel.dataset.w){b.classList.add('ok');J.sel.classList.add('ok');J.sel.style.outline='';J.sel=null;J.hechos++;
+        if(J.hechos===3){J.bloq=true;goles++;guardar();const g=document.createElement('div');g.className='gol';g.textContent=BIEN[Math.floor(Math.random()*BIEN.length)];document.getElementById('campo').appendChild(g);
+          setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1200)}}
+      else{J.fallos++;b.classList.add('mal');setTimeout(()=>b.classList.remove('mal'),450);document.getElementById('msg').textContent=J.fallos>=2?'Lee la palabra despacito y busca su dibujo.':'¡Casi! Prueba otra vez.';
+        if(J.fallos>=2){const c=[...app.querySelectorAll('.udib')].find(x=>x.dataset.w===J.sel.dataset.w);if(c)c.classList.add('pista')}}});
+    document.getElementById('volver').onclick=menu;return}
   document.getElementById('volver').onclick=menu;
   if(J.id==='silabas'){let n=0;document.getElementById('palmar').onclick=()=>{if(n<6){n++;document.getElementById('palmas').textContent='👏'.repeat(n)}};}
   app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>responder(b));
 }
 function correcta(){
   const it=J.items[J.ronda];
-  return {silabas:String(it.n),termina:it[1],inicial:it[1],porterias:it.l,rimas:it[1]}[J.id];
+  return {silabas:String(it.n),termina:it[1],inicial:it[1],porterias:it.l,rimas:it[1],leebusca:it,rodea:it,letra:it&&it.w?it.w[it.i]:null,donde:it&&it.ok}[J.id];
 }
 const BIEN=['¡GOOOL!','¡Golazo!','¡Qué crack!','¡Muy bien!','¡Toma ya!'];
 function responder(btn){
@@ -182,6 +234,7 @@ function responder(btn){
   if(ok){
     J.bloq=true;btn.classList.add('ok');goles++;guardar();
     if(J.id==='termina'){const h=document.getElementById('hueco');h.textContent=btn.dataset.v;h.classList.remove('hueco')}
+    if(J.id==='letra'){const h=document.getElementById('hueco');h.textContent=btn.dataset.v;h.style.color=''}
     const g=document.createElement('div');g.className='gol';g.textContent=BIEN[Math.floor(Math.random()*BIEN.length)];document.getElementById('campo').appendChild(g);
     setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1200);
   }else{
