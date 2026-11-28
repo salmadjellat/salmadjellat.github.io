@@ -104,7 +104,7 @@ const guardar=()=>{try{localStorage.setItem('martin-puntos',goles);localStorage.
 /* ---------- datos de cada juego ---------- */
 Object.assign(E,{mapa:'🗺️',pila:'🔋',pino:'🌲',patín:'🛼',lata:'🥫',lupa:'🔍',lana:'🧶',melón:'🍈',tele:'📺',naranja:'🍊',lápiz:'✏️',tigre:'🐯',taza:'☕',serpiente:'🐍',maleta:'🧳',plato:'🍽️',foto:'📷',aceituna:'🫒',mesa:'🪑'});
 delete E.mesa;
-function decir(t,r){try{if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=r||.8;const v=speechSynthesis.getVoices().find(v=>/^es/i.test(v.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function decir(t,r){try{if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=r||.8;const vs=speechSynthesis.getVoices();const v=vs.find(v=>/^es[-_]ES/i.test(v.lang))||vs.find(v=>/^es/i.test(v.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 /* palabras de dos sílabas con m, p, s, t, n, l */
 const MITAD=[['ma','no','mano'],['mo','no','mono'],['mo','to','moto'],['ma','pa','mapa'],['pa','to','pato'],['pi','la','pila'],['pi','no','pino'],['pa','tín','patín'],['sa','po','sapo'],['se','ta','seta'],['so','pa','sopa'],['lu','na','luna'],['la','ta','lata'],['lu','pa','lupa'],['la','na','lana'],['li','món','limón'],['me','lón','melón'],['te','le','tele']];
 const REALES=new Set('palo pala pasa papa pata pana mama masa mata mala malo mesa mona misa mina mimo pesa peso pelo pena pipa pino pisa piso pila pita polo pomo pone puma sopa sapo sala seta sola solo sono suma supo sumo tapa tela tema tila tina tipo toma tono tope toso luna lupa lata lana lima lino lisa liso lomo loma losa lote nata nene nena nota nulo pato mapa mano mono moto mula mulo sano sana tata tapo topo tomo lapa napa mete meta mapa limón melón patín sapo mamá papá tele tela lelo leme lena lepe pino pina mino mono mole mota mote'.split(' '));
@@ -116,11 +116,27 @@ const INI=[['mono','m'],['moto','m'],['mano','m'],['mapa','m'],['manzana','m'],[
  ['luna','l'],['lobo','l'],['león','l'],['limón','l'],['lápiz','l'],['lata','l'],['lupa','l'],['lana','l']];
 const RIMAS=[['gato','pato','zapato','plato'],['foca','boca'],['pelota','bota'],['caracol','sol'],['manzana','ventana'],['ratón','camión','león','corazón','limón','melón'],['abeja','oveja'],['tortuga','lechuga'],['conejo','espejo'],['tomate','chocolate'],['seta','maleta'],['moto','foto'],['luna','aceituna'],['lata','patata']];
 
+/* ---------- s / z ---------- */
+const SZ={s:[['sol','☀️'],['sapo','🐸'],['seta','🍄'],['silla','🪑'],['oso','🐻'],['sopa','🍲'],['casa','🏠'],['rosa','🌹'],['sandía','🍉'],['vaso','🥛'],['mesa','🪑']].filter(x=>x[0]!=='mesa'),
+ z:[['zapato','👞'],['zumo','🧃'],['taza','☕'],['lazo','🎀'],['cebra','🦓'],['cereza','🍒'],['manzana','🍎'],['corazón','❤️'],['calabaza','🎃'],['buzón','📮']],['ciervo','🦌']]};
+const BMSZ=[['zapato','sapato','👞'],['zorro','sorro','🦊'],['cereza','seresa','🍒'],['corazón','corasón','❤️'],['lazo','laso','🎀'],['cebra','sebra','🦓'],['calabaza','calabasa','🎃'],['manzana','mansana','🍎'],
+ ['sopa','zopa','🍲'],['silla','zilla','🪑'],['sol','zol','☀️'],['oso','ozo','🐻'],['sapo','zapo','🐸'],['vaso','vazo','🥛'],['sandía','zandía','🍉']];
+/* ---------- lectura de bisílabas con m, l, p, s, t, n ---------- */
+const LB=[['mano','✋',['ma','no']],['mono','🐒',['mo','no']],['moto','🏍️',['mo','to']],['pato','🦆',['pa','to']],['sapo','🐸',['sa','po']],['seta','🍄',['se','ta']],['sopa','🍲',['so','pa']],
+ ['luna','🌙',['lu','na']],['lupa','🔍',['lu','pa']],['mapa','🗺️',['ma','pa']],['pino','🌲',['pi','no']],['lata','🥫',['la','ta']],['pila','🔋',['pi','la']],['ola','🌊',['o','la']],['oso','🐻',['o','so']],['pala','🧹',['pa','la']].slice(0,0)].filter(x=>x.length);
+const SILB=[...new Set(LB.flatMap(x=>x[2]))];
+
 const JUEGOS=[
  {id:'sisi-zico',ico:'🐍',nombre:'Sisi y Zico',desc:'Está en «Mis juegos».',fuera:true},
  {id:'inicial',ico:'👂',nombre:'¿Cuál empieza igual?',desc:'Busca el dibujo que empieza con el mismo sonido.'},
  {id:'rimas',ico:'🎵',nombre:'Cazarrimas',desc:'¿Cuál suena igual al final?'},
  {id:'mitad',ico:'🧩',nombre:'La otra mitad',desc:'Escucha y elige el trozo que falta.'},
+ {id:'garaje',ico:'🅿️',nombre:'El garaje de Sisi y Zico',desc:'¿Tiene el sonido de Sisi o el de Zico?'},
+ {id:'szbien',ico:'🤔',nombre:'¿Lo ha dicho bien?',desc:'Escucha: ¿está bien dicha?'},
+ {id:'empieza',ico:'🚦',nombre:'¿Cuál empieza así?',desc:'Lee la sílaba y busca el dibujo.'},
+ {id:'donde',ico:'🔎',nombre:'¿Dónde está la sílaba?',desc:'Busca la sílaba en la palabra.'},
+ {id:'leer',ico:'📖',nombre:'Lee y busca',desc:'Lee la palabra y busca su dibujo.'},
+ {id:'completa',ico:'🔧',nombre:'Completa la palabra',desc:'Pon la sílaba que falta.'},
 ].filter(j=>!j.fuera);
 const COCHES=['🚗','🚙','🚕'];
 
@@ -130,7 +146,7 @@ function menu(){
   app.innerHTML=`<div class="top"><a class="chip" href="j-41f17b2f1741f6c8.html">← Mis juegos</a><div class="marcador">🏁 Puntos <b>${goles}</b></div></div>
   <h1>La carrera de las palabras</h1><p class="sub">Elige un juego. ¡Cada acierto es un punto!</p>
   <div class="menu">${JUEGOS.map(j=>`<button class="juego" data-id="${j.id}"><span class="ico">${j.ico}</span><span class="t"><b>${j.nombre}</b><span>${j.desc}</span><span class="estrellas">${est[j.id]?'🏆 ×'+est[j.id]:''}</span></span></button>`).join('')}</div>
-  <div class="nota"><b>Para el adulto:</b> los juegos van sin letras para que Martín escuche y diga las palabras. Con el botón «👀 Para el adulto» podéis ver el nombre de los dibujos o los trozos de palabra; volved a tocarlo para ocultarlo. En «La otra mitad», los cochecitos suenan al tocarlos (si la tablet no habla, decid vosotros los trozos). Si falla dos veces, la respuesta correcta brilla para ayudarle.</div>`;
+  <div class="nota"><b>Para el adulto:</b> los juegos de sonidos van sin letras para que Martín escuche y diga las palabras; en «¿Cuál empieza así?», «¿Dónde está la sílaba?», «Lee y busca» y «Completa la palabra» lee sílabas y palabras con m, l, p, s, t y n. En los juegos de Sisi y Zico, el botón 🔊 dice la palabra; si la tablet no habla o su voz no distingue la s de la z (voces con seseo), decidla vosotros con naturalidad. Con el botón «👀 Para el adulto» podéis ver el nombre de los dibujos o los trozos de palabra; volved a tocarlo para ocultarlo. En «La otra mitad», los cochecitos suenan al tocarlos (si la tablet no habla, decid vosotros los trozos). Si falla dos veces, la respuesta correcta brilla para ayudarle.</div>`;
   app.querySelectorAll('.juego').forEach(b=>b.onclick=()=>empezar(b.dataset.id));
 }
 
@@ -140,6 +156,12 @@ function empezar(id){J={id,ronda:0,fallos:0,items:generar(id)};location.hash=id;
 function generar(id){
   if(id==='inicial')return pick(INI,RONDAS).map(([w,l])=>{const iguales=INI.filter(x=>x[1]===l&&x[0]!==w);const b=sh(iguales)[0][0];const otros=sh(INI.filter(x=>x[1]!==l));const o=[];const ls=new Set();for(const x of otros){if(!ls.has(x[1])){ls.add(x[1]);o.push(x[0])}if(o.length===2)break}return [w,b,o]});
   if(id==='rimas')return pick(RIMAS,RONDAS).map(g=>{const [a,b]=sh(g).slice(0,2);const otros=sh(RIMAS.filter(x=>x!==g)).slice(0,2).map(x=>sh(x)[0]);return [a,b,otros]});
+  if(id==='garaje')return sh([...pick(SZ.s,4).map(x=>({w:x[0],e:x[1],ok:'s'})),...pick(SZ.z,4).map(x=>({w:x[0],e:x[1],ok:'z'}))]);
+  if(id==='szbien')return pick(BMSZ,RONDAS).map((x,i)=>{const bien=Math.random()<.5;return {w:bien?x[0]:x[1],e:x[2],ok:bien?'b':'m'}});
+  if(id==='empieza')return pick(LB,RONDAS).map(x=>{const t=x[2][0];const otros=sh(LB.filter(y=>y[2][0]!==t)).slice(0,2);return {t,ok:x[0],ops:sh([x,...otros])}});
+  if(id==='donde')return pick(LB.filter(x=>x[2].length===2&&x[2][0]!==x[2][1]),RONDAS).map(x=>{const k=Math.random()<.5?0:1;return {x,t:x[2][k],ok:String(k)}});
+  if(id==='leer')return pick(LB,RONDAS).map(x=>({x,ok:x[0],ops:sh([x,...sh(LB.filter(y=>y!==x)).slice(0,2)])}));
+  if(id==='completa')return pick(LB.filter(x=>x[2].length===2),RONDAS).map(x=>{const k=Math.random()<.5?0:1;const ok=x[2][k];const pool=SILB.filter(y=>y!==ok&&!LB.some(z=>z[2].length===2&&(k?z[2][0]===x[2][0]&&z[2][1]===y:z[2][0]===y&&z[2][1]===x[2][1])));return {x,k,ok,ops:sh([ok,...sh(pool).slice(0,2)])}});
   if(id==='mitad')return pick(MITAD,RONDAS).map(([s1,s2,w])=>{const falta=Math.random()<.5?0:1;const dada=falta?s1:s2,ok=falta?s2:s1;
     const pool=[...new Set(MITAD.map(x=>x[falta]))].filter(s=>s!==ok&&!REALES.has(falta?dada+s:s+dada));const ops=sh([ok,...sh(pool).slice(0,2)]);return {w,falta,dada,ok,ops}});
 }
@@ -171,20 +193,45 @@ function pintar(){
     <button class="palmar" id="todas" type="button">🔊 Escuchar los tres</button>
     <div class="opciones">${it.ops.map((s,i)=>`<button class="op coche" data-v="${s}">${COCHES[i]}</button>`).join('')}</div>`;
   }
+  if(J.id==='garaje'){
+    cuerpo=`<div class="titulo">El garaje de Sisi y Zico</div><div class="consigna">Escucha la palabra. ¿Tiene el sonido de Sisi (sss) o el de Zico (zzz)?</div>
+    <div class="dibujo">${it.e}</div><button class="palmar" id="oir" type="button">🔊 Escuchar</button>${bAdulto('«'+it.w+'»')}
+    <div class="opciones"><button class="op" data-v="s" style="font-size:30px">🐍 Sisi</button><button class="op" data-v="z" style="font-size:30px">🦊 Zico</button></div>`}
+  if(J.id==='szbien'){
+    cuerpo=`<div class="titulo">¿Lo ha dicho bien?</div><div class="consigna">Mira el dibujo y escucha. ¿La palabra está bien dicha o mal dicha?</div>
+    <div class="dibujo">${it.e}</div><button class="palmar" id="oir" type="button">🔊 Escuchar</button>${bAdulto('Decid: «'+it.w+'»')}
+    <div class="opciones"><button class="op" data-v="b" style="font-size:30px">👍 Bien</button><button class="op" data-v="m" style="font-size:30px">👎 Mal</button></div>`}
+  if(J.id==='empieza'){
+    cuerpo=`<div class="titulo">¿Cuál empieza así?</div><div class="consigna">Lee el trozo. ¿Qué dibujo empieza así?</div>
+    <div class="palabra"><span class="sil">${it.t}</span></div>${bAdulto(it.ops.map(x=>x[0]).join(' · '))}
+    <div class="opciones">${it.ops.map(x=>`<button class="op emo" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>`}
+  if(J.id==='donde'){
+    cuerpo=`<div class="titulo">¿Dónde está la sílaba?</div><div class="consigna">Busca <b style="font-size:1.4em">${it.t}</b> en la palabra y tócala.</div>
+    <div class="dibujo">${it.x[1]}</div><div class="palabra">${it.x[2].map((y,k)=>`<button class="sil op" data-v="${k}">${y}</button>`).join('')}</div>`}
+  if(J.id==='leer'){
+    cuerpo=`<div class="titulo">Lee y busca</div><div class="consigna">Lee la palabra. ¿Cuál es su dibujo?</div>
+    <div class="palabra"><span class="sil">${it.x[0]}</span></div>
+    <div class="opciones">${it.ops.map(x=>`<button class="op emo" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>`}
+  if(J.id==='completa'){
+    cuerpo=`<div class="titulo">Completa la palabra</div><div class="consigna">Di el dibujo. ¿Qué trozo falta?</div>
+    <div class="dibujo">${it.x[1]}</div><div class="palabra">${it.x[2].map((y,k)=>k===it.k?'<span class="sil hueco" id="hueco">?</span>':`<span class="sil">${y}</span>`).join('')}</div>
+    <div class="opciones">${it.ops.map(x=>`<button class="op" data-v="${x}">${x}</button>`).join('')}</div>`}
   app.innerHTML=cabecera()+`<div class="campo" id="campo">${cuerpo}<div class="msg" id="msg"></div></div>`;
   document.getElementById('volver').onclick=menu;
   const ad=document.getElementById('adulto');if(ad)ad.onclick=()=>{const v=ad.classList.toggle('visto');ad.textContent=v?ad.dataset.w+' · ocultar':'👀 Para el adulto'};
+  const oir=document.getElementById('oir');if(oir){oir.onclick=()=>decir(it.w);setTimeout(()=>decir(it.w),300)}
   if(J.id==='mitad'){document.getElementById('dada').onclick=()=>decir(it.dada);setTimeout(()=>decir(it.dada),300);
     document.getElementById('todas').onclick=()=>{const bs=[...app.querySelectorAll('.op.coche')];bs.forEach((b,i)=>setTimeout(()=>{bs.forEach(x=>x.classList.remove('suena'));b.classList.add('suena');decir(b.dataset.v);setTimeout(()=>b.classList.remove('suena'),900)},i*1300))};}
   app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(J.id==='mitad'){decir(b.dataset.v);setTimeout(()=>responder(b),650)}else responder(b)});
 }
-function correcta(){const it=J.items[J.ronda];return J.id==='mitad'?it.ok:it[1]}
+function correcta(){const it=J.items[J.ronda];return (it&&it.ok!==undefined)?it.ok:it[1]}
 const BIEN=['¡Brum, brum!','¡Meta!','¡Qué crack!','¡Muy bien!','¡Toma ya!'];
 function responder(btn){
   if(J.bloq)return;
   const ok=btn.dataset.v===correcta();
   if(ok){
     J.bloq=true;btn.classList.add('ok');goles++;guardar();
+    if(J.id==='completa'){const h=document.getElementById('hueco');h.textContent=btn.dataset.v;h.classList.remove('hueco')}
     if(J.id==='mitad'){const it=J.items[J.ronda];const h=document.getElementById('hueco');h.textContent='✔';h.classList.remove('hueco');setTimeout(()=>decir(it.w,.9),200)}
     const g=document.createElement('div');g.className='gol';g.textContent=BIEN[Math.floor(Math.random()*BIEN.length)];document.getElementById('campo').appendChild(g);
     setTimeout(()=>{J.bloq=false;J.primera=(J.primera||0)+(J.fallos===0?1:0);J.ronda++;pintar()},1400);

@@ -113,6 +113,7 @@ const CAMBIA=[['pera','🍐','r','d','peda','pesa'],['loro','🦜','r','d','lodo
  ['moda','','d','r','mora','mota'],['codo','','d','r','coro','coco'],['mido','','d','r','miro','mito']];
 const SON=[['dado','🎲',4],['nido','🪺',4],['pera','🍐',4],['toro','🐂',4],['loro','🦜',4],['cara','😊',4],['nudo','🪢',4],['oreja','👂',5],['moneda','🪙',6],['corona','👑',6],['sirena','🧜‍♀️',6],['medusa','🪼',6],['jirafa','🦒',6],['cereza','🍒',6],['espada','🗡️',6],['oro','🥇',3],['ola','🌊',3],['diente','🦷',6]];
 const PS={d:['madipo','tedusa','podame','fidaso','sudeta','nodime','tadume'],r:['maripe','teruso','pirame','furaso','sorepa','nirime','meruta']};
+const RIM=[[['toro','🐂'],['loro','🦜'],['oro','🥇']],[['dado','🎲'],['helado','🍦'],['candado','🔒']],[['pera','🍐'],['tijera','✂️']],[['sirena','🧜‍♀️'],['ballena','🐋']],[['pirata','🏴‍☠️'],['patata','🥔']],[['oreja','👂'],['oveja','🐑'],['abeja','🐝']],[['mariposa','🦋'],['rosa','🌹']],[['espada','🗡️'],['hada','🧚']]];
 const ORD=['1.º','2.º','3.º','4.º'];
 const JUEGOS=[
  {id:'bienmal',ico:'🤔',nombre:'¿Lo ha dicho bien?',desc:'Escucha y descubre si la palabra está bien dicha.',consigna:'Mira el dibujo y escucha. ¿La palabra está bien dicha o mal dicha?',
@@ -129,6 +130,10 @@ const JUEGOS=[
     ops:sh([ok,o,dis]).map(w=>({v:w,t:w}))}))},
  {id:'sonidos',ico:'🔢',nombre:'Cuenta los sonidos',desc:'¿Cuántos sonidos tiene la palabra?',consigna:'Di la palabra muy despacio, sonido a sonido. ¿Cuántos sonidos tiene?',
   gen:()=>pick(SON,RONDAS).map(([w,e,n])=>({ok:String(n),escena:`<div class="dibujo">${e}</div>`,ops:[3,4,5,6].map(k=>({v:String(k),t:String(k)}))}))},
+ {id:'palmadas',ico:'👏',nombre:'Palmadas de sílabas',desc:'¿Cuántos trozos tiene la palabra?',consigna:'Di la palabra dando palmadas. ¿Cuántas palmadas son?',
+  gen:()=>pick(SF,RONDAS).map(([sl,p,e])=>({ok:String(sl.length),escena:`<div class="dibujo">${e}</div>${adulto(sl.join(''))}`,ops:[1,2,3,4].map(k=>({v:String(k),t:String(k)}))}))},
+ {id:'rimas',ico:'🎵',nombre:'Cazarrimas del mar',desc:'¿Cuál termina igual?',consigna:'Di el nombre del dibujo. ¿Cuál termina igual?',
+  gen:()=>pick(RIM,RONDAS).map(g=>{const [a,b]=sh(g).slice(0,2);const otros=sh(RIM.filter(x=>x!==g)).slice(0,2).map(x=>sh(x)[0]);const ops=sh([b,...otros]);return {ok:b[0],escena:`<div class="dibujo">${a[1]}</div>${adulto(a[0]+' → '+ops.map(x=>x[0]).join(' · '))}`,ops:ops.map(x=>({v:x[0],t:x[1],emo:true}))}})},
  {id:'magicas',ico:'🪄',nombre:'Palabras mágicas largas',desc:'Palabras inventadas de tres trozos.',consigna:'Es una palabra inventada y larga. ¿Tiene la d de Dida o la r de Mara?',
   gen:()=>sh([...pick(PS.d,4).map(w=>[w,'d']),...pick(PS.r,4).map(w=>[w,'r'])]).map(([w,k])=>({tipo:'pers',ok:k,escena:`<div class="dibujo">🪄</div>${adulto(w)}`,ops:DM}))}
 ];
